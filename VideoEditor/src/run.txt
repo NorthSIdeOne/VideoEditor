@@ -1,0 +1,1 @@
+ & C:/Users/Stefan/Anaconda3/python.exe "c:/MY FILES/ProiectAM/VideoEditor/src/main.py"
