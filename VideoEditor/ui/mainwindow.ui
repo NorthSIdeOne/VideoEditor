@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1033</width>
-    <height>745</height>
+    <width>1124</width>
+    <height>740</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -86,20 +86,41 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButton_11">
+           <widget class="QPushButton" name="addButton">
             <property name="minimumSize">
              <size>
               <width>0</width>
               <height>20</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">
+background-color: #353738
+</string>
+            </property>
             <property name="text">
-             <string>PushButton</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../resources/icons/add.png</normaloff>../resources/icons/add.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_12">
+           <widget class="QPushButton" name="deleteButton">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -107,7 +128,20 @@
              </size>
             </property>
             <property name="text">
-             <string>PushButton</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../resources/icons/delete.png</normaloff>../resources/icons/delete.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -181,14 +215,26 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="leftMargin">
+        <number>11</number>
+       </property>
        <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
         <widget class="QFrame" name="pfTabWidgetFrame">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>400</width>
+           <width>250</width>
            <height>16777215</height>
           </size>
          </property>
@@ -219,6 +265,9 @@
           </property>
           <item>
            <widget class="QTabWidget" name="tabWidget">
+            <property name="acceptDrops">
+             <bool>true</bool>
+            </property>
             <property name="styleSheet">
              <string notr="true">QTabWidget {
 border: 0;
@@ -318,10 +367,17 @@ QTabBar::tab:focus {
                <number>0</number>
               </property>
               <item>
-               <widget class="QListWidget" name="videoFiles">
+               <widget class="QListView" name="videoFiles">
+                <property name="acceptDrops">
+                 <bool>true</bool>
+                </property>
                 <property name="styleSheet">
-                 <string notr="true">background:black
-</string>
+                 <string notr="true">QListView{background-color: black; color: white ;font-size: 16px; outline:none;font-weight:bold} // Working.
+QListView::item:selected{font:bold}  // Not working!
+QListView::item:selected{background-color: rgb(14, 97,123)}</string>
+                </property>
+                <property name="dragEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -411,8 +467,8 @@ QToolBox QScrollArea QWidget QWidget {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>285</width>
-                   <height>259</height>
+                   <width>246</width>
+                   <height>263</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -535,27 +591,17 @@ QToolBox QScrollArea QWidget QWidget {
               <number>0</number>
              </property>
              <item>
-              <widget class="QFrame" name="EmptyFrame_2">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QFrame" name="vpcfControlsFrame">
                <property name="minimumSize">
                 <size>
-                 <width>200</width>
-                 <height>20</height>
+                 <width>250</width>
+                 <height>45</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>750</width>
-                 <height>40</height>
+                 <width>800</width>
+                 <height>50</height>
                 </size>
                </property>
                <property name="frameShape">
@@ -565,36 +611,314 @@ QToolBox QScrollArea QWidget QWidget {
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
                 <item>
-                 <widget class="QPushButton" name="rewind">
-                  <property name="maximumSize">
+                 <spacer name="horizontalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
                    <size>
-                    <width>16777215</width>
-                    <height>16777215</height>
+                    <width>40</width>
+                    <height>20</height>
                    </size>
                   </property>
+                 </spacer>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>70</width>
+                    <height>10</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="rewind">
+                  <property name="minimumSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+    color: #333;
+    border: 0px solid #555;
+    border-radius: 15px;
+    border-style: outset;
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #888
+        );
+    padding: 5px;
+    }
+
+QPushButton:hover {
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #bbb
+        );
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background: qradialgradient(
+        cx: 0.4, cy: -0.1, fx: 0.4, fy: -0.1,
+        radius: 1.35, stop: 0 #fff, stop: 1 #ddd
+        );
+    }</string>
+                  </property>
                   <property name="text">
-                   <string>PushButton</string>
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../resources/icons/1262942-multimedia/png/026-rewind.png</normaloff>../resources/icons/1262942-multimedia/png/026-rewind.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
                   </property>
                  </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
                 </item>
                 <item>
                  <widget class="QPushButton" name="playButton">
                   <property name="minimumSize">
                    <size>
-                    <width>0</width>
-                    <height>0</height>
+                    <width>30</width>
+                    <height>30</height>
                    </size>
                   </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+    color: #333;
+    border: 0px solid #555;
+    border-radius: 15px;
+    border-style: outset;
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #888
+        );
+    padding: 5px;
+    }
+
+QPushButton:hover {
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #bbb
+        );
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background: qradialgradient(
+        cx: 0.4, cy: -0.1, fx: 0.4, fy: -0.1,
+        radius: 1.35, stop: 0 #fff, stop: 1 #ddd
+        );
+    }</string>
+                  </property>
                   <property name="text">
-                   <string>Play</string>
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../resources/icons/play.png</normaloff>../resources/icons/play.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
                   </property>
                  </widget>
                 </item>
                 <item>
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
                  <widget class="QPushButton" name="fastForward">
+                  <property name="minimumSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+    color: #333;
+    border: 0px solid #555;
+    border-radius: 15px;
+    border-style: outset;
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #888
+        );
+    padding: 5px;
+    }
+
+QPushButton:hover {
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #bbb
+        );
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background: qradialgradient(
+        cx: 0.4, cy: -0.1, fx: 0.4, fy: -0.1,
+        radius: 1.35, stop: 0 #fff, stop: 1 #ddd
+        );
+    }</string>
+                  </property>
                   <property name="text">
-                   <string>PushButton</string>
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../resources/icons/1262942-multimedia/png/008-forward.png</normaloff>../resources/icons/1262942-multimedia/png/008-forward.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>30</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="volumeIcon">
+                  <property name="minimumSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+    color: #333;
+    border: 0px solid #555;
+    border-radius: 20px;
+    border-style: outset;
+    background:#353738;
+    padding: 5px;
+    }
+
+QPushButton:hover {
+    background: #353738;
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background: #353738;
+    }</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../resources/icons/1262942-multimedia/png/speaker.png</normaloff>../resources/icons/1262942-multimedia/png/speaker.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
                   </property>
                  </widget>
                 </item>
@@ -617,8 +941,7 @@ border-radius: 4px;
 QSlider::sub-page:horizontal {
 background: qlineargradient(x1: 0, y1: 0,    x2: 0, y2: 1,
     stop: 0 #66e, stop: 1 #bbf);
-background: qlineargradient(x1: 0, y1: 0.2, x2: 1, y2: 1,
-    stop: 0 #bbf, stop: 1 #55f);
+background: green;
 border: 1px solid #777;
 height: 10px;
 border-radius: 4px;
@@ -794,18 +1117,23 @@ border-radius: 4px;
                   </property>
                  </widget>
                 </item>
+                <item>
+                 <spacer name="horizontalSpacer_5">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="QFrame" name="EmptyFrame">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_7"/>
               </widget>
              </item>
             </layout>
@@ -1291,7 +1619,7 @@ border-radius: 3px;
                 </palette>
                </property>
                <property name="text">
-                <string>0 secunde</string>
+                <string>0:00:00</string>
                </property>
                <property name="margin">
                 <number>4</number>
@@ -1306,6 +1634,9 @@ border-radius: 3px;
        </item>
        <item>
         <widget class="QFrame" name="sfTimeLineFrame">
+         <property name="acceptDrops">
+          <bool>true</bool>
+         </property>
          <property name="styleSheet">
           <string notr="true">background:black
 </string>
@@ -1329,7 +1660,7 @@ border-radius: 3px;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1033</width>
+     <width>1124</width>
      <height>26</height>
     </rect>
    </property>
@@ -1337,7 +1668,6 @@ border-radius: 3px;
     <property name="title">
      <string>Files</string>
     </property>
-    <addaction name="openVideo"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
