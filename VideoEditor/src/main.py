@@ -8,6 +8,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtCore import Qt,QUrl,QAbstractListModel
 import styleSheet
 from PyQt5.QtCore import QAbstractListModel
+import FoldersConfig as ProjectFolders
+
+
 
 class PlaylistModel(QAbstractListModel):
     def __init__(self, playlist, *args, **kwargs):
@@ -41,11 +44,14 @@ class MainWindow(QMainWindow):
             This function initialize all the buttons and all the setting for
             displaying and control the video.
         """
-        self.index = -1
+
+        #Total number of curent media opened
+        self.totalIndex = -1
+        #Dictionary for index and path for the media
         self.curentFiles = {}
-        self.curentIndex = self.index
-        self.deleteButton.clicked.connect(self.RemoveVideo)
-        self.addButton.clicked.connect(self.openFile)
+        #Index that indicates the curent media selected
+        self.curentIndex = self.totalIndex
+
         #Create a mediaplayer object to control the video
         self.mediaPlayer = QMediaPlayer(None,QMediaPlayer.VideoSurface)
         self.mediaPlayer.setVolume(50)
@@ -82,6 +88,13 @@ class MainWindow(QMainWindow):
 
         #next Button
 
+        #Add video button
+        self.addButton.clicked.connect(self.openFile)
+
+        #Remove video button
+
+        self.deleteButton.clicked.connect(self.RemoveVideo)
+
         #Slider settings timeline
         self.videoTimeSlider.setRange(0,0)
         self.videoTimeSlider.sliderMoved.connect(self.setPosition)
@@ -111,13 +124,16 @@ class MainWindow(QMainWindow):
         if fileName[0] != '':
             #Set to mediaPlayer object the file(video)
             self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(fileName[0])))
-            self.index = self.index + 1
-            print("Index = " + str(self.index))
-            self.curentFiles[self.index] = fileName[0]
-            print(self.curentFiles)
+            #Update total number of curent media opened
+            self.totalIndex = self.totalIndex + 1
+            #Update the curentFiles dict which holds the path for the opened videos
+            self.curentFiles[self.totalIndex] = fileName[0]
+
             #Enable the play button after the video was set
             self.playButton.setEnabled(True)
+            #Add media to the playlist
             self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(fileName[0])))
+            #A new media was added so we sent a signal to updated List view
             self.model.layoutChanged.emit()
 
     def playVideo(self):
@@ -126,6 +142,7 @@ class MainWindow(QMainWindow):
         """
         #Checks the state of the video.If the video is playing it will be paused.
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
+            #Pause the video
             self.mediaPlayer.pause()
         else:
             #If the video is paused it will be playing
@@ -141,9 +158,11 @@ class MainWindow(QMainWindow):
         """
 
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
-            self.playButton.setIcon(QIcon("../resources/icons/1262942-multimedia/png/002-pause.png"))
+            #Change playButton icon into "Pause icon"
+            self.playButton.setIcon(QIcon("../resources/icons/GUI_Icons/002-pause.png"))
         else:
-            self.playButton.setIcon(QIcon("../resources/icons/1262942-multimedia/png/025-play.png"))
+            #Change playButton icon into "Play icon"
+            self.playButton.setIcon(QIcon("../resources/icons/GUI_Icons/play.png"))
 
 
 
@@ -211,31 +230,21 @@ class MainWindow(QMainWindow):
 
         #If the volume is zero the icon of the volume is changed
         if(volume == 0):
-            self.volumeIcon.setIcon(QIcon("../resources/icons/1262942-multimedia/png/mute.png"))
+            self.volumeIcon.setIcon(QIcon("../resources/icons/GUI_Icons/mute.png"))
         else:
-            self.volumeIcon.setIcon(QIcon("../resources/icons/1262942-multimedia/png/speaker.png"))
+            self.volumeIcon.setIcon(QIcon("../resources/icons/GUI_Icons/speaker.png"))
 
 
 
-    def closeEvent(self, event):
-        """
-            Popup a dialog when the user is trying to close the main app.
-        """
-        reply = QMessageBox.question(self, 'Window Close', 'Are you sure you want to close the window?',
-				QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
-        if reply == QMessageBox.Yes:
-            event.accept()
-            print('Window closed')
-        else:
-            event.ignore()
+
     def playlist_selection_changed(self, ix):
         # We receive a QItemSelection from selectionChanged.
         i = ix.indexes()[0].row()
         self.playlist.setCurrentIndex(i)
-        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[i])))
         self.curentIndex = i
-        print(i)
+        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[self.curentIndex])))
+
 
     def playlist_position_changed(self, i):
         if i > -1:
@@ -244,30 +253,90 @@ class MainWindow(QMainWindow):
 
 
     def RemoveVideo(self):
-        if(self.curentIndex != -1):
-            self.playlist.removeMedia(self.curentIndex)
-            self.index=self.index - 1
-            if(self.index > -1):
-                del self.curentFiles[self.curentIndex]
-                self.SortFilesIndex()
-                print(self.curentFiles)
-            else:
-                self.playButton.setEnabled(False)
-                self.videoTimeSlider.setValue(0)
+        """
+            This function is connected to the remove button on Project files.
+            It removes the file from List view and curentFiles dictionary.It also
+            changethe mediaPlayer output based on what media was left.If the is media
+            left the video output will be the firs mediaFile from the list.If the List view
+            have no media left,the video output will be an video of 1 seconds with black background
+            to clear the screen.
+
+        """
+        if(self.totalIndex != -1):
+            if(self.curentIndex != -1):
+                try:
+                    #Delete media from index "curentIndex"
+                    self.playlist.removeMedia(self.curentIndex)
+                    try:
+                        #Delete the file name from index "curentIndex" from curentFiles
+                        del self.curentFiles[self.curentIndex]
+                        #Decrement the total number of videos opened
+                        self.totalIndex=self.totalIndex - 1
+                        #Update index of every video from curentFiles
+                        self.SortFilesIndex()
+
+
+                        if(self.totalIndex == -1):
+                            try:
+                                self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("../resources/videos/blackvideo.mp4")))
+                                #Block the play button
+                                self.playButton.setEnabled(False)
+                                #Reset the time slider
+                                self.videoTimeSlider.setValue(0)
+                                #Reset the time slider
+                                self.videoTimeSlider.setRange(0,0)
+                            except:
+                                print("The black video couldn't be loaded")
+                        else:
+                           try:
+                               self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[0])))
+                           except:
+                               print("The mediaPlayer couldn't be updated")
+
+                    except:
+                        print("The value from index "+str(self.curentIndex) + " could not be deleted form curentFiles")
+                except:
+                    print("Media cannot be deleted from playlist")
+        else:
+            #Block the play button
+            self.playButton.setEnabled(False)
+            #Reset the time slider
+            self.videoTimeSlider.setValue(0)
+            #Reset the time slider
+            self.videoTimeSlider.setRange(0,0)
 
 
 
     def SortFilesIndex(self):
+        """
+            This function sort the curentFiles dictionary.
+            When an element is deleted from curentFiles the function
+            sort the index of the curentFiles ascending.
+        """
         newIndex = 0
         newCurentFiles = {}
+        #loop through the curentFiles and update the index
         for key in self.curentFiles:
             newCurentFiles[newIndex] = self.curentFiles[key]
             newIndex+=1
+
+        #curentFiles files is updated to the new dictionary of files
         self.curentFiles =  newCurentFiles.copy()
 
 
 
+        def closeEvent(self, event):
+            """
+                Popup a dialog when the user is trying to close the main app.
+            """
+            reply = QMessageBox.question(self, 'Window Close', 'Are you sure you want to close the window?',
+    				QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
+            if reply == QMessageBox.Yes:
+                event.accept()
+                print('Window closed')
+            else:
+                event.ignore()
 
 app = QApplication(sys.argv)
 window = MainWindow()

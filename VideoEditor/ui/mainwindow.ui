@@ -103,7 +103,7 @@ background-color: #353738
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../resources/icons/add.png</normaloff>../resources/icons/add.png</iconset>
+              <normaloff>../resources/icons/GUI_Icons/add.png</normaloff>../resources/icons/GUI_Icons/add.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -132,7 +132,7 @@ background-color: #353738
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../resources/icons/delete.png</normaloff>../resources/icons/delete.png</iconset>
+              <normaloff>../resources/icons/GUI_Icons/delete.png</normaloff>../resources/icons/GUI_Icons/delete.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -702,7 +702,7 @@ QPushButton:pressed {
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../resources/icons/1262942-multimedia/png/026-rewind.png</normaloff>../resources/icons/1262942-multimedia/png/026-rewind.png</iconset>
+                    <normaloff>../resources/icons/GUI_Icons/026-rewind.png</normaloff>../resources/icons/GUI_Icons/026-rewind.png</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -775,7 +775,7 @@ QPushButton:pressed {
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../resources/icons/play.png</normaloff>../resources/icons/play.png</iconset>
+                    <normaloff>../resources/icons/GUI_Icons/play.png</normaloff>../resources/icons/GUI_Icons/play.png</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -848,7 +848,7 @@ QPushButton:pressed {
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../resources/icons/1262942-multimedia/png/008-forward.png</normaloff>../resources/icons/1262942-multimedia/png/008-forward.png</iconset>
+                    <normaloff>../resources/icons/GUI_Icons/008-forward.png</normaloff>../resources/icons/GUI_Icons/008-forward.png</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -912,7 +912,7 @@ QPushButton:pressed {
                   </property>
                   <property name="icon">
                    <iconset>
-                    <normaloff>../resources/icons/1262942-multimedia/png/speaker.png</normaloff>../resources/icons/1262942-multimedia/png/speaker.png</iconset>
+                    <normaloff>../resources/icons/GUI_Icons/speaker.png</normaloff>../resources/icons/GUI_Icons/speaker.png</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
