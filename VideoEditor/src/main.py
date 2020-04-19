@@ -96,6 +96,8 @@ class MainWindow(QMainWindow):
         #rewind button
         self.rewind.clicked.connect(self.rewindFunction)
 
+        #Speed label
+        self.speedLabel.setText("1.0x")
         #Add video button
         self.addButton.clicked.connect(self.openFile)
 
@@ -227,14 +229,16 @@ class MainWindow(QMainWindow):
     def skipbackFunction(self):
         self.mediaPlayer.setPosition(self.mediaPlayer.position() -15000)
     def rewindFunction(self):
-        if(self.speed - 0.1 >0):
+        if(self.speed - 0.1 >=0.1):
             self.speed-=0.1
         self.mediaPlayer.setPlaybackRate(self.speed)
+        self.speedLabel.setText(str(round(self.speed, 2))+"x")
 
     def fastForwardFunction(self):
-        if(self.speed + 0.1 <=2.5):
+        if(self.speed + 0.1 <=2.1):
             self.speed+=0.1
         self.mediaPlayer.setPlaybackRate(self.speed)
+        self.speedLabel.setText(str(round(self.speed, 2))+"x")
 
     def volumeControl(self,volume):
         """
@@ -274,6 +278,7 @@ class MainWindow(QMainWindow):
         self.curentIndex = i
         self.speed = 1
         self.mediaPlayer.setPlaybackRate(self.speed)
+        self.speedLabel.setText(str(self.speed)+"x")
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[self.curentIndex])))
 
 
