@@ -326,7 +326,7 @@ QTabBar::tab:focus {
              <enum>QTabWidget::South</enum>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <property name="elideMode">
              <enum>Qt::ElideRight</enum>
@@ -409,7 +409,8 @@ QListView::item:selected{background-color: rgb(14, 97,123)}</string>
                  <string notr="true">QToolBox {
   padding: 0px;
   border: 0px;
-  border: 1px solid #32414B;
+  border: 1px solid rgb(37, 38, 39);
+
 }
 
 QToolBox:selected {
@@ -418,7 +419,7 @@ QToolBox:selected {
 }
 
 QToolBox::tab {
-  background-color: #353738;
+  background-color:#353738;
   border: 1px solid#353738;
   color: #F0F0F0;
   border-top-left-radius: 4px;
@@ -426,21 +427,21 @@ QToolBox::tab {
 }
 
 QToolBox::tab:disabled {
-  color:#353738;
+  color:red;
 }
 
 QToolBox::tab:selected {
-  background-color: #353738;
+  background-color: rgb(38, 39, 40);
   border-bottom: 2px solid #1464A0;
 }
 
 QToolBox::tab:selected:disabled {
-  background-color: #353738;
+  background-color:red;
   border-bottom: 2px solid #14506E;
 }
 
 QToolBox::tab:!selected {
-  background-color: #353738;
+  background-color: rgb(40, 42, 43)
   border-bottom: 2px solid #32414B;
 }
 
@@ -471,6 +472,9 @@ QToolBox QScrollArea QWidget QWidget {
                    <height>263</height>
                   </rect>
                  </property>
+                 <property name="styleSheet">
+                  <string notr="true">background:rgb(29, 30, 31)</string>
+                 </property>
                  <attribute name="label">
                   <string>Cut</string>
                  </attribute>
@@ -480,9 +484,12 @@ QToolBox QScrollArea QWidget QWidget {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>246</width>
+                   <height>263</height>
                   </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background:rgb(29, 30, 31)</string>
                  </property>
                  <attribute name="label">
                   <string>Page 2</string>
@@ -713,6 +720,76 @@ QPushButton:pressed {
                  </widget>
                 </item>
                 <item>
+                 <spacer name="horizontalSpacer_7">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="skipbackButton">
+                  <property name="minimumSize">
+                   <size>
+                    <width>40</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>40</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+    color: #333;
+    border: 0px solid #555;
+    border-radius: 20px;
+    background:#353738;
+    }
+
+QPushButton:hover {
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #bbb
+        );
+    }
+QPushButton:pressed {
+    border-style: inset;
+    background: qradialgradient(
+        cx: 0.4, cy: -0.1, fx: 0.4, fy: -0.1,
+        radius: 1.35, stop: 0 #fff, stop: 1 #ddd
+        );
+    }</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../resources/icons/GUI_Icons/15seconds_back.png</normaloff>../resources/icons/GUI_Icons/15seconds_back.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>50</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <spacer name="horizontalSpacer_3">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -796,6 +873,76 @@ QPushButton:pressed {
                   <property name="sizeHint" stdset="0">
                    <size>
                     <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="skipforwardButton">
+                  <property name="minimumSize">
+                   <size>
+                    <width>40</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>40</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+    color: #333;
+    border: 0px solid #555;
+    border-radius: 20px;
+    background:#353738;
+    }
+
+QPushButton:hover {
+    background: qradialgradient(
+        cx: 0.3, cy: -0.4, fx: 0.3, fy: -0.4,
+        radius: 1.35, stop: 0 #fff, stop: 1 #bbb
+        );
+    }
+QPushButton:pressed {
+    border-style: inset;
+    background: qradialgradient(
+        cx: 0.4, cy: -0.1, fx: 0.4, fy: -0.1,
+        radius: 1.35, stop: 0 #fff, stop: 1 #ddd
+        );
+    }</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../resources/icons/GUI_Icons/15seconds_forward.png</normaloff>../resources/icons/GUI_Icons/15seconds_forward.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>50</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_8">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
                     <height>20</height>
                    </size>
                   </property>
@@ -1647,7 +1794,6 @@ border-radius: 3px;
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6"/>
         </widget>
        </item>
       </layout>

@@ -10,5 +10,3 @@ parentDir = os.path.dirname(fileDir)
 resourcesDir = parentDir+r"\resources"
 #Videos directory:\VideoEditor\resources\videos
 videosDir = resourcesDir+"\\videos\\"
-
-

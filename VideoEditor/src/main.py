@@ -9,8 +9,8 @@ from PyQt5.QtCore import Qt,QUrl,QAbstractListModel
 import styleSheet
 from PyQt5.QtCore import QAbstractListModel
 import FoldersConfig as ProjectFolders
-
-
+import sys
+from qtimeline import QTimeLine
 
 class PlaylistModel(QAbstractListModel):
     def __init__(self, playlist, *args, **kwargs):
@@ -25,7 +25,7 @@ class PlaylistModel(QAbstractListModel):
     def rowCount(self, index):
         return self.playlist.mediaCount()
 
-import sys
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -51,7 +51,8 @@ class MainWindow(QMainWindow):
         self.curentFiles = {}
         #Index that indicates the curent media selected
         self.curentIndex = self.totalIndex
-
+        #Media play speed
+        self.speed = 1
         #Create a mediaplayer object to control the video
         self.mediaPlayer = QMediaPlayer(None,QMediaPlayer.VideoSurface)
         self.mediaPlayer.setVolume(50)
@@ -84,9 +85,16 @@ class MainWindow(QMainWindow):
         #PlayButton
         self.playButton.setEnabled(False)
         self.playButton.clicked.connect(self.playVideo)
-        #rewind Button
+        #back 15 seconds Button
+        self.skipbackButton.clicked.connect(self.skipbackFunction)
+        #skip 15 seconds forward Button
+        self.skipforwardButton.clicked.connect(self.skipforwadFunction)
 
-        #next Button
+        #fastorForward button
+        self.fastForward.clicked.connect(self.fastForwardFunction)
+
+        #rewind button
+        self.rewind.clicked.connect(self.rewindFunction)
 
         #Add video button
         self.addButton.clicked.connect(self.openFile)
@@ -113,6 +121,12 @@ class MainWindow(QMainWindow):
         #Set output to the video
         self.mediaPlayer.setVideoOutput(videoWidget)
 
+        qtimeline = QTimeLine(360,1)
+        self.test = QVBoxLayout()
+        qtimeline2 = QTimeLine(360,1)
+        self.test.addWidget(qtimeline)
+        self.test.addWidget(qtimeline2)
+        self.sfTimeLineFrame.setLayout(self.test)
 
     def openFile(self):
         """
@@ -198,6 +212,7 @@ class MainWindow(QMainWindow):
         """
         self.videoTimeSlider.setRange(0,duration)
 
+
     def setPosition(self,position):
         """
             Sets the video time based on time slider.
@@ -205,7 +220,21 @@ class MainWindow(QMainWindow):
             to a specific time,the video position is updated.
         """
         self.mediaPlayer.setPosition(position)
+        print(self.mediaPlayer.position)
 
+    def skipforwadFunction(self):
+        self.mediaPlayer.setPosition(self.mediaPlayer.position() + 15000)
+    def skipbackFunction(self):
+        self.mediaPlayer.setPosition(self.mediaPlayer.position() -15000)
+    def rewindFunction(self):
+        if(self.speed - 0.1 >0):
+            self.speed-=0.1
+        self.mediaPlayer.setPlaybackRate(self.speed)
+
+    def fastForwardFunction(self):
+        if(self.speed + 0.1 <=2.5):
+            self.speed+=0.1
+        self.mediaPlayer.setPlaybackRate(self.speed)
 
     def volumeControl(self,volume):
         """
@@ -243,12 +272,15 @@ class MainWindow(QMainWindow):
         i = ix.indexes()[0].row()
         self.playlist.setCurrentIndex(i)
         self.curentIndex = i
+        self.speed = 1
+        self.mediaPlayer.setPlaybackRate(self.speed)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[self.curentIndex])))
 
 
     def playlist_position_changed(self, i):
         if i > -1:
             ix = self.model.index(i)
+            print("playlist_position_changed")
             self.videoFiles.setCurrentIndex(ix)
 
 
