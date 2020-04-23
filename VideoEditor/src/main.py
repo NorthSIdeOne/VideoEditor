@@ -59,7 +59,6 @@ class MainWindow(QMainWindow):
 
         #Create videoWidget object for displaying the video
         videoWidget = QVideoWidget()
-
         #Create a playlist object for multiple videos
         self.playlist = QMediaPlaylist()
         self.mediaPlayer.setPlaylist(self.playlist)
@@ -125,8 +124,8 @@ class MainWindow(QMainWindow):
 
         qtimeline = QTimeLine(360,1)
         self.test = QVBoxLayout()
-        qtimeline2 = QTimeLine(360,1)
         self.test.addWidget(qtimeline)
+        qtimeline2 = QTimeLine(360,1)
         self.test.addWidget(qtimeline2)
         self.sfTimeLineFrame.setLayout(self.test)
 
