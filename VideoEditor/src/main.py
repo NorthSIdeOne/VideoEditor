@@ -128,6 +128,27 @@ class MainWindow(QMainWindow):
         qtimeline2 = QTimeLine(360,1)
         self.test.addWidget(qtimeline2)
         self.sfTimeLineFrame.setLayout(self.test)
+        self.concatenateComboBox =  QtWidgets.QComboBox(self)
+
+        self.entry = QtGui.QStandardItemModel()
+        self.concatenateList.setModel(self.entry)
+        self.concatenateList.clicked[QtCore.QModelIndex].connect(self.on_clicked)
+        # When you receive the signal, you call QtGui.QStandardItemModel.itemFromIndex()
+        # on the given model index to get a pointer to the item
+        self.concatenateVideoList.removeItem(0)
+
+        for text in ["Itemname1", "Itemname2", "Itemname3", "Itemname4"]:
+            it = QtGui.QStandardItem(text)
+            self.entry.appendRow(it)
+        self.itemOld = QtGui.QStandardItem("text")
+
+
+    def on_clicked(self, index):
+        item = self.entry.itemFromIndex(index)
+
+        #self.entry.clearItemData(index)
+        self.entry.sort(0)
+        print(item.index().row())
 
     def openFile(self):
         """
@@ -148,6 +169,10 @@ class MainWindow(QMainWindow):
             self.playButton.setEnabled(True)
             #Add media to the playlist
             self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(fileName[0])))
+
+            #Add item to the list for avalabile videos for concatenate
+            self.concatenateVideoList.addItem(fileName[0].split('/')[-1])
+            print(self.concatenateVideoList.currentIndex())
             #A new media was added so we sent a signal to updated List view
             self.model.layoutChanged.emit()
 
@@ -310,6 +335,7 @@ class MainWindow(QMainWindow):
                         self.totalIndex=self.totalIndex - 1
                         #Update index of every video from curentFiles
                         self.SortFilesIndex()
+
 
 
                         if(self.totalIndex == -1):
