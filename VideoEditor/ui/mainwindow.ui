@@ -475,7 +475,7 @@ QToolBox QScrollArea QWidget QWidget {
 }</string>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>4</number>
                 </property>
                 <widget class="QWidget" name="Concatenate">
                  <property name="geometry">
@@ -483,7 +483,7 @@ QToolBox QScrollArea QWidget QWidget {
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>345</height>
+                   <height>365</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -917,7 +917,7 @@ QTableCornerButton::section {
                        <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_15">
                          <item>
-                          <widget class="QPushButton" name="addButton_2">
+                          <widget class="QPushButton" name="addConcatenate">
                            <property name="minimumSize">
                             <size>
                              <width>26</width>
@@ -967,7 +967,7 @@ QPushButton:hover {
                           </widget>
                          </item>
                          <item>
-                          <widget class="QPushButton" name="deleteButton_2">
+                          <widget class="QPushButton" name="removeConcatenate">
                            <property name="minimumSize">
                             <size>
                              <width>26</width>
@@ -1021,7 +1021,7 @@ QPushButton:pressed {
                           </widget>
                          </item>
                          <item>
-                          <widget class="QPushButton" name="pushButton_18">
+                          <widget class="QPushButton" name="concatenateButton">
                            <property name="minimumSize">
                             <size>
                              <width>30</width>
@@ -1181,7 +1181,7 @@ QPushButton:pressed {
                        </property>
                        <layout class="QHBoxLayout" name="horizontalLayout_11">
                         <item>
-                         <widget class="QTextEdit" name="textEdit">
+                         <widget class="QTextEdit" name="cutStart">
                           <property name="maximumSize">
                            <size>
                             <width>100</width>
@@ -1226,7 +1226,7 @@ QTextEdit:selected {
                          </spacer>
                         </item>
                         <item>
-                         <widget class="QPushButton" name="pushButton_2">
+                         <widget class="QPushButton" name="lockButtonStart">
                           <property name="minimumSize">
                            <size>
                             <width>41</width>
@@ -1304,7 +1304,7 @@ QPushButton:pressed {
                        </property>
                        <layout class="QHBoxLayout" name="horizontalLayout_10">
                         <item>
-                         <widget class="QTextEdit" name="textEdit_2">
+                         <widget class="QTextEdit" name="cutFinish">
                           <property name="maximumSize">
                            <size>
                             <width>100</width>
@@ -1349,7 +1349,7 @@ QTextEdit:selected {
                          </spacer>
                         </item>
                         <item>
-                         <widget class="QPushButton" name="pushButton">
+                         <widget class="QPushButton" name="lockButtonFinish">
                           <property name="minimumSize">
                            <size>
                             <width>41</width>
@@ -1415,7 +1415,7 @@ QPushButton:pressed {
                        </property>
                        <layout class="QHBoxLayout" name="horizontalLayout_12">
                         <item>
-                         <widget class="QPushButton" name="pushButton_3">
+                         <widget class="QPushButton" name="cutButton">
                           <property name="maximumSize">
                            <size>
                             <width>60</width>
@@ -1473,7 +1473,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>345</height>
+                   <height>365</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -1502,7 +1502,7 @@ QPushButton:pressed {
                   <property name="frameShadow">
                    <enum>QFrame::Raised</enum>
                   </property>
-                  <widget class="QComboBox" name="comboBox">
+                  <widget class="QComboBox" name="ResolutionsList">
                    <property name="geometry">
                     <rect>
                      <x>20</x>
@@ -1519,7 +1519,7 @@ QPushButton:pressed {
     selection-background-color: #111;
     selection-color: #19232D;
     color: white;
-    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #565656, stop: 0.1 #525252, stop: 0.5 #4e4e4e, stop: 0.9 #4a4a4a, stop: 1 #464646);
+    background-color: #505F69;
     border-style: solid;
     border: 1px solid #1e1e1e;
     border-radius: 5;
@@ -1550,7 +1550,8 @@ QComboBox:on
 QComboBox:!on
 {
     color: white;
-    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 0.1 #555, stop: 0.5 #555, stop: 0.9 #444, stop: 1 #333);
+  /*  background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 0.1 #555, stop: 0.5 #555, stop: 0.9 #444, stop: 1 #333);*/
+	 background-color:#505F69;
 }
 
 QComboBox QAbstractItemView
@@ -1834,10 +1835,10 @@ QComboBox::down-arrow, QSpinBox::down-arrow, QTimeEdit::down-arrow, QDateEdit::d
 </string>
                    </property>
                    <property name="text">
-                    <string>Select Rezolution</string>
+                    <string>Select Resolution</string>
                    </property>
                   </widget>
-                  <widget class="QLabel" name="label_2">
+                  <widget class="QLabel" name="resolutionIcon">
                    <property name="geometry">
                     <rect>
                      <x>50</x>
@@ -1853,6 +1854,133 @@ QComboBox::down-arrow, QSpinBox::down-arrow, QTimeEdit::down-arrow, QDateEdit::d
                     <pixmap>../resources/icons/GUI_Icons/144.png</pixmap>
                    </property>
                   </widget>
+                  <widget class="QWidget" name="horizontalLayoutWidget_3">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>260</y>
+                     <width>241</width>
+                     <height>80</height>
+                    </rect>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_18">
+                    <item>
+                     <spacer name="horizontalSpacer_12">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="changeResolution">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                        <horstretch>200</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QPushButton {
+  background-color: #505F69;
+  border: 1px solid #32414B;
+  color: #F0F0F0;
+  border-radius: 4px;
+  padding: 3px;
+  outline: none;
+  /* Issue #194 - Special case of QPushButton inside dialogs, for better UI */
+  min-width: 80px;
+}
+
+QPushButton:disabled {
+  background-color: #32414B;
+  border: 1px solid #32414B;
+  color: #787878;
+  border-radius: 4px;
+  padding: 3px;
+}
+
+QPushButton:checked {
+  background-color: #32414B;
+  border: 1px solid #32414B;
+  border-radius: 4px;
+  padding: 3px;
+  outline: none;
+}
+
+QPushButton:checked:disabled {
+  background-color: #19232D;
+  border: 1px solid #32414B;
+  color: #787878;
+  border-radius: 4px;
+  padding: 3px;
+  outline: none;
+}
+
+QPushButton:checked:selected {
+  background: #1464A0;
+  color: #32414B;
+}
+
+QPushButton::menu-indicator {
+  subcontrol-origin: padding;
+  subcontrol-position: bottom right;
+  bottom: 4px;
+}
+
+QPushButton:pressed {
+  background-color: #19232D;
+  border: 1px solid #19232D;
+}
+
+QPushButton:pressed:hover {
+  border: 1px solid #148CD2;
+}
+
+QPushButton:hover {
+  border: 1px solid #148CD2;
+  color: #F0F0F0;
+}
+
+QPushButton:selected {
+  background: #1464A0;
+  color: #32414B;
+}
+
+QPushButton:hover {
+  border: 1px solid #148CD2;
+  color: #F0F0F0;
+}
+
+QPushButton:focus {
+  border: 1px solid #1464A0;
+}</string>
+                      </property>
+                      <property name="text">
+                       <string>Change resolution</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_13">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </widget>
                  </widget>
                 </widget>
                 <widget class="QWidget" name="mirroring">
@@ -1864,7 +1992,7 @@ QComboBox::down-arrow, QSpinBox::down-arrow, QTimeEdit::down-arrow, QDateEdit::d
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>345</height>
+                   <height>365</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -1921,7 +2049,7 @@ QComboBox::down-arrow, QSpinBox::down-arrow, QTimeEdit::down-arrow, QDateEdit::d
                       <bool>true</bool>
                      </property>
                     </widget>
-                    <widget class="QPushButton" name="pushButton_11">
+                    <widget class="QPushButton" name="mirroringButton">
                      <property name="geometry">
                       <rect>
                        <x>90</x>
@@ -1969,7 +2097,7 @@ QComboBox::down-arrow, QSpinBox::down-arrow, QTimeEdit::down-arrow, QDateEdit::d
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>345</height>
+                   <height>365</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2382,7 +2510,7 @@ QPushButton:focus {
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>345</height>
+                   <height>365</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2527,7 +2655,7 @@ QPushButton:focus {
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>345</height>
+                   <height>365</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2836,7 +2964,7 @@ QToolButton::menu-arrow:hover {
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>345</height>
+                   <height>365</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -4172,6 +4300,9 @@ border-radius: 5px;
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
+               <property name="tickPosition">
+                <enum>QSlider::NoTicks</enum>
+               </property>
               </widget>
              </item>
              <item>
@@ -4336,7 +4467,7 @@ border-radius: 5px;
      <x>0</x>
      <y>0</y>
      <width>1423</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFiles">

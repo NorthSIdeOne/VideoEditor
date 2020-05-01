@@ -11,6 +11,9 @@ from PyQt5.QtCore import QAbstractListModel
 import FoldersConfig as ProjectFolders
 import sys
 from qtimeline import QTimeLine
+from VideoEditing import Panel
+from Multithreading import Worker
+
 
 class PlaylistModel(QAbstractListModel):
     def __init__(self, playlist, *args, **kwargs):
@@ -24,6 +27,7 @@ class PlaylistModel(QAbstractListModel):
 
     def rowCount(self, index):
         return self.playlist.mediaCount()
+
 
 
 
@@ -45,20 +49,35 @@ class MainWindow(QMainWindow):
             displaying and control the video.
         """
 
+        """<Objects>"""
+        #Object for controling all edit functions
+        self.edit = Panel()
+        """</Objects>"""
+
+        """--------------------<Global variables>----------------------------"""
         #Total number of curent media opened
         self.totalIndex = -1
         #Dictionary for index and path for the media
         self.curentFiles = {}
         #Index that indicates the curent media selected
         self.curentIndex = self.totalIndex
+        #Curent index of Concatenate ListView
+        self.curentIndexOfConcatenateList = -1
+        #Dictionary with all video path for concatenate
+        self.concatenateVideos ={}
+        #Total number of videos added to the concatenate list view
+        self.totalNrOfVideosConcat = -1
         #Media play speed
         self.speed = 1
+
+        """-------------------</Global variables>----------------------------"""
+
+        """----------------<Media player settings>---------------------------"""
         #Create a mediaplayer object to control the video
         self.mediaPlayer = QMediaPlayer(None,QMediaPlayer.VideoSurface)
         self.mediaPlayer.setVolume(50)
 
-        #Create videoWidget object for displaying the video
-        videoWidget = QVideoWidget()
+
         #Create a playlist object for multiple videos
         self.playlist = QMediaPlaylist()
         self.mediaPlayer.setPlaylist(self.playlist)
@@ -70,20 +89,52 @@ class MainWindow(QMainWindow):
         selection_model = self.videoFiles.selectionModel()
         selection_model.selectionChanged.connect(self.playlist_selection_changed)
 
+        #Create videoWidget object for displaying the video
+        videoWidget = QVideoWidget()
         #videoWidget set
         self.videoPreviewLayout = QVBoxLayout()
         self.videoPreviewLayout.addWidget(videoWidget)
         self.vpfVideoPreview.setLayout(self.videoPreviewLayout)
+        """----------------</Media player settings>--------------------------"""
 
+
+        """-----------------<Buttons&Labels settings>-------------------------"""
         #Create Open Video button in taskbar
         self.open = QAction('&Open Video', self)
         self.open.setStatusTip('Open Video')
-        self.open.triggered.connect(self.openFile)
         self.menuFiles.addAction(self.open)
         self.setAcceptDrops(True)
+
         #PlayButton
         self.playButton.setEnabled(False)
+        #Speed label
+        self.speedLabel.setText("1.0x")
+        #Slider settings timeline
+        self.videoTimeSlider.setRange(0,0)
+        #Slider settings volume
+        self.volume.setRange(0,100)
+        self.volume.setValue(50)
+        self.volumeTextDisplay.setText("50%")
+        #Cut lock buttons
+        self.lockButtonStart.setCheckable(True)
+        self.lockButtonFinish.setCheckable(True)
+        #Cut text editor settings
+        self.cutStart.setReadOnly(True)
+        self.cutFinish.setReadOnly(True)
+        self.cutStart.setText("0:00:00")
+        self.cutFinish.setText("0:00:00")
+        #Resolution Image settings
+        self.resolutionIcon.setPixmap(QPixmap("../resources/icons/GUI_Icons/720.png"))
+
+        """-----------------</Buttons&Labels settings>-------------------------"""
+
+
+        """-----------------<Buttons connections>------------------------------"""
+
+        """           -----------<Player buttons>---------                    """
+        #Play button
         self.playButton.clicked.connect(self.playVideo)
+
         #back 15 seconds Button
         self.skipbackButton.clicked.connect(self.skipbackFunction)
         #skip 15 seconds forward Button
@@ -91,65 +142,331 @@ class MainWindow(QMainWindow):
 
         #fastorForward button
         self.fastForward.clicked.connect(self.fastForwardFunction)
-
         #rewind button
         self.rewind.clicked.connect(self.rewindFunction)
 
-        #Speed label
-        self.speedLabel.setText("1.0x")
         #Add video button
         self.addButton.clicked.connect(self.openFile)
-
         #Remove video button
-
         self.deleteButton.clicked.connect(self.RemoveVideo)
 
-        #Slider settings timeline
-        self.videoTimeSlider.setRange(0,0)
+        #Time slider
         self.videoTimeSlider.sliderMoved.connect(self.setPosition)
 
-        #Slider settings volume
-        self.volume.setRange(0,100)
-        self.volumeTextDisplay.setText("50%")
-        self.volume.setValue(50)
+        #Volume slider
         self.volume.sliderMoved.connect(self.volumeControl)
 
         #media player change state
         self.mediaPlayer.stateChanged.connect(self.mediaStateChange)
         self.mediaPlayer.positionChanged.connect(self.positionChange)
         self.mediaPlayer.durationChanged.connect(self.durationChange)
+        """         -----------</Player buttons>---------                   """
+        #Open file
+        self.open.triggered.connect(self.openFile)
 
-        #Set output to the video
-        self.mediaPlayer.setVideoOutput(videoWidget)
+        """         -------------<Edit  Buttons>-----------------           """
 
+
+        """<Concatenate>"""
+        #Create a model for Concatenate Lisview
+        self.concatenateModel = QtGui.QStandardItemModel()
+        #Set the model to the Concatenate List view
+        self.concatenateList.setModel(self.concatenateModel)
+        #Concatenate list of videos
+        self.concatenateList.clicked[QtCore.QModelIndex].connect(self.setConcatenateIndex)
+        #Add button to concatenate list
+        self.addConcatenate.clicked.connect(self.addVideoToConcatenate)
+        # When you receive the signal, you call QtGui.QStandardItemModel.itemFromIndex()
+        # on the given model index to get a pointer to the item
+        self.removeConcatenate.clicked.connect(self.removeVideoToConcatenate)
+        #Concatenate Button
+        self.concatenateButton.clicked.connect(self.concatenateThreadFunction)
+        """</Concatenate>"""
+
+
+        """<Cut>"""
+        #Lock cut filed1
+        self.lockButtonStart.clicked.connect(self.lockButtonChangeIconStart)
+        #Lock cut filed2
+        self.lockButtonFinish.clicked.connect(self.lockButtonChangeIconFinish)
+        #Cut button
+        self.cutButton.clicked.connect(self.cutThreadFunction)
+        """</Cut>"""
+
+        """<Resolution>"""
+        #Resoluiton ComboBox for selecting the desired resolution
+        self.ResolutionsList.currentIndexChanged.connect(self.changeResolutionDisplay)
+        #Change resolution button
+        self.changeResolution.clicked.connect(self.changeResolutionF)
+        """</Resoluton>"""
+
+
+        """<Mirror>"""
+        #Mirror button
+        self.mirroringButton.clicked.connect(self.mirrorVideo)
+        """</Mirror>"""
+        """         -------------</Edit  Buttons>-----------------            """
+
+        """-----------------</Buttons connections>----------------------------"""
+
+
+
+        """-------------------<Threads for editing>--------------------------"""
+
+        self.concatenateThread = QThreadPool()
+        self.cutThread         = QThreadPool()
+        self.resizeThread      = QThreadPool()
+
+        """-------------------</Threads for editing>--------------------------"""
+
+
+        """<Experimental>"""
         qtimeline = QTimeLine(360,1)
         self.test = QVBoxLayout()
         self.test.addWidget(qtimeline)
         qtimeline2 = QTimeLine(360,1)
         self.test.addWidget(qtimeline2)
         self.sfTimeLineFrame.setLayout(self.test)
-        self.concatenateComboBox =  QtWidgets.QComboBox(self)
+        """</Experimental>"""
 
-        self.entry = QtGui.QStandardItemModel()
-        self.concatenateList.setModel(self.entry)
-        self.concatenateList.clicked[QtCore.QModelIndex].connect(self.on_clicked)
-        # When you receive the signal, you call QtGui.QStandardItemModel.itemFromIndex()
-        # on the given model index to get a pointer to the item
-        self.concatenateVideoList.removeItem(0)
-
-        for text in ["Itemname1", "Itemname2", "Itemname3", "Itemname4"]:
-            it = QtGui.QStandardItem(text)
-            self.entry.appendRow(it)
-        self.itemOld = QtGui.QStandardItem("text")
+        #Set output to the video
+        self.mediaPlayer.setVideoOutput(videoWidget)
 
 
-    def on_clicked(self, index):
-        item = self.entry.itemFromIndex(index)
 
-        #self.entry.clearItemData(index)
-        self.entry.sort(0)
-        print(item.index().row())
+    """ ------------------<Concatenate functions>---------------------------"""
+    def setConcatenateIndex(self, index):
+            """
+                Set the curent index of the selected
+                item from concatenate list view (self.concatenateList)
+            """
+            #Get the item from the model of index "index"
+            item = self.concatenateModel.itemFromIndex(index)
+            #Get the "item " row index
+            self.curentIndexOfConcatenateList = item.index().row()
+            print(self.concatenateVideos)
 
+    def addVideoToConcatenate(self):
+            """
+                Add from 'concatenateVideoList'
+                a video to 'concatenateList'
+            """
+
+            try:
+                #Add the current video selected from the ComboBox to the concatenate list view
+                item = QtGui.QStandardItem(self.curentFiles[self.concatenateVideoList.currentIndex()].split('/')[-1])
+                self.concatenateModel.appendRow(item)
+                self.totalNrOfVideosConcat+=1
+                self.concatenateVideos[self.totalNrOfVideosConcat] = self.curentFiles[self.concatenateVideoList.currentIndex()]
+
+            except:
+                print("No video")
+                print(self.concatenateVideoList.currentIndex())
+
+
+    def removeVideoToConcatenate(self):
+            """
+                Remove video from concatenation list.
+            """
+            try:
+                self.concatenateModel.removeRow(self.curentIndexOfConcatenateList)
+                del self.concatenateVideos[self.curentIndexOfConcatenateList]
+                self.totalNrOfVideosConcat-=1
+                self.SortFilesIndexConcat()
+
+            except:
+                print("Error when removing video from list")
+
+
+
+    def concatenate(self):
+            """
+                This function is used for concatenate multiple videos
+                from the list.
+            """
+            if(self.curentIndex == -1 and self.totalIndex != -1):
+                self.curentIndex = 0
+            try:
+                videosToConcatenate = []
+
+                #I'm adding the main video
+                videosToConcatenate.append(self.curentFiles[self.curentIndex])
+
+                #Add the path to all videos to be concatenated
+                for key in self.concatenateVideos:
+                     videosToConcatenate.append(self.concatenateVideos[key])
+
+                #Save the current index befor concatenation because
+                #during the concatenation the user could change the curent video
+                #so it would affect curentFiles
+                indexOfRootVideo = self.curentIndex
+                print(videosToConcatenate)
+                #Call concatenate function and save the url of the modified video
+                self.curentFiles[indexOfRootVideo] =self.edit.concat(videosToConcatenate)
+
+                #Update the media with the edited video
+                self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
+
+                #Clear concatenate list view
+                self.concatenateModel.removeRows( 0, self.concatenateModel.rowCount())
+                #Clear the dict that holds all the data for concatenation
+                self.concatenateVideos.clear()
+                #Reste the number of videos to be concatenated
+                self.totalNrOfVideosConcat = -1
+
+            except:
+                print("A problem occured during concatenation process.Check 'concatenate' function")
+
+
+    def SortFilesIndexConcat(self):
+            """
+                This function sort the curentFiles dictionary.
+                When an element is deleted from curentFiles the function
+                sort the index of the curentFiles ascending.
+            """
+            newIndex = 0
+            newCurentFiles = {}
+            #loop through the curentFiles and update the index
+            for key in self.concatenateVideos:
+                newCurentFiles[newIndex] = self.concatenateVideos[key]
+                newIndex+=1
+
+            #curentFiles files is updated to the new dictionary of files
+            self.concatenateVideos =  newCurentFiles.copy()
+
+    def concatenateThreadFunction(self):
+            worker = Worker(self.concatenate)
+            self.concatenateThread.start(worker)
+
+    """-------------------</Concatenate functions>--------------------------"""
+
+
+    """-----------------------<Cut functions>--------------------------------"""
+
+    def lockButtonChangeIconStart(self):
+            """
+                Function for changing the icon
+                when the button is pressed.
+            """
+            if(self.lockButtonStart.isChecked() == True):
+                self.lockButtonStart.setIcon(QIcon("../resources/icons/GUI_Icons/icons8-lock-80.png"))
+            else:
+                self.lockButtonStart.setIcon(QIcon("../resources/icons/GUI_Icons/icons8-padlock-80.png"))
+
+    def lockButtonChangeIconFinish(self):
+            """
+                Function for changing the icon
+                when the button is pressed.
+            """
+
+            if(self.lockButtonFinish.isChecked() == True):
+                self.lockButtonFinish.setIcon(QIcon("../resources/icons/GUI_Icons/icons8-lock-80.png"))
+            else:
+                self.lockButtonFinish.setIcon(QIcon("../resources/icons/GUI_Icons/icons8-padlock-80.png"))
+
+    def restCutButtons(self):
+            """
+                This function is used to reset
+                all the value for cut section.
+            """
+            self.cutStart.setText("0:00:00")
+            self.cutFinish.setText("0:00:00")
+            if(self.lockButtonStart.isChecked() == True):
+                self.lockButtonStart.toggle()
+            if(self.lockButtonFinish.isChecked() == True):
+                self.lockButtonFinish.toggle()
+            self.lockButtonChangeIconStart()
+            self.lockButtonChangeIconFinish()
+
+    def cutVideo(self):
+            """
+                Function used for cut a video from
+                'start' to 'finish' and replace in the
+                'curentFiles'(dictionary that holds all opend video)
+                the curent video path with the path provided by the
+                'edit.cut'
+            """
+            if(self.curentIndex == -1 and self.totalIndex != -1):
+                self.curentIndex = 0
+            try:
+                #empty list to put the source video
+                videoList = []
+                videoList.append(self.curentFiles[self.curentIndex])
+                #if both buttons are pressed the the function can be called
+                if(self.lockButtonStart.isChecked() == True and self.lockButtonFinish.isChecked() == True):
+                        try:
+                            #save the current index before cut because user can change the 'curentIndex' during execution
+                            indexOfRootVideo = self.curentIndex
+                            #call the cut function and the result path is saved in currentFiles
+                            self.curentFiles[indexOfRootVideo] = self.edit.cut(videoList, self.cutStart.toPlainText(),self.cutFinish.toPlainText())
+                            #Set the new video
+                            self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
+                            #Reset all values for cut function
+                            self.restCutButtons()
+                        except:
+                            print("Problem in cutVideo at self.edit.cut or mediaPlayer")
+            except:
+                print("Problem in cutVideo function")
+
+
+    def cutThreadFunction(self):
+           worker = Worker(self.cutVideo)
+           self.cutThread.start(worker)
+
+    """-----------------------</Cut functions>-------------------------------"""
+
+    """-----------------------<Mirror functions>-----------------------------"""
+
+    def mirrorVideo(self):
+        if(self.curentIndex == -1 and self.totalIndex != -1):
+            self.curentIndex = 0
+        try:
+            indexOfRootVideo = self.curentIndex
+            self.curentFiles[indexOfRootVideo] = self.edit.video_mirroring([self.curentFiles[indexOfRootVideo]])
+            self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
+        except:
+            print("Problem in change mirror function")
+
+    """-----------------------</Mirror functions>-----------------------------"""
+
+
+    """-----------------------<Resoluton functions>-----------------------------"""
+
+    def changeResolutionF(self):
+        """
+            Function for changing the video resolution.
+        """
+        if(self.curentIndex == -1 and self.totalIndex != -1):
+            self.curentIndex = 0
+        currentResolution = self.ResolutionsList.currentText()[0:len(self.ResolutionsList.currentText())-1]
+        try:
+            indexOfRootVideo = self.curentIndex
+            self.curentFiles[indexOfRootVideo] = self.edit.video_resize([self.curentFiles[indexOfRootVideo]],currentResolution)
+            self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
+        except:
+            print("Problem in change resolution")
+
+    def changeResolutionDisplay(self):
+        """
+            Usef for changing image in resolution section
+            when the user select a resolution.
+        """
+        resolutionsIconList = ["../resources/icons/GUI_Icons/720.png","../resources/icons/GUI_Icons/540.png","../resources/icons/GUI_Icons/360.png","../resources/icons/GUI_Icons/240.png","../resources/icons/GUI_Icons/144.png"]
+        if(self.ResolutionsList.currentIndex() == 0):
+            self.resolutionIcon.setPixmap(QPixmap(resolutionsIconList[0]))
+        elif(self.ResolutionsList.currentIndex() == 1):
+            self.resolutionIcon.setPixmap(QPixmap(resolutionsIconList[1]))
+        elif(self.ResolutionsList.currentIndex() == 2):
+            self.resolutionIcon.setPixmap(QPixmap(resolutionsIconList[2]))
+        elif(self.ResolutionsList.currentIndex() == 3):
+            self.resolutionIcon.setPixmap(QPixmap(resolutionsIconList[3]))
+        elif(self.ResolutionsList.currentIndex() == 4):
+            self.resolutionIcon.setPixmap(QPixmap(resolutionsIconList[4]))
+
+    """-----------------------</Resoluton functions>--------------------------"""
+
+
+    """--------------------------<File functions>----------------------------"""
     def openFile(self):
         """
             Function for opening a video file from
@@ -172,9 +489,14 @@ class MainWindow(QMainWindow):
 
             #Add item to the list for avalabile videos for concatenate
             self.concatenateVideoList.addItem(fileName[0].split('/')[-1])
-            print(self.concatenateVideoList.currentIndex())
+
             #A new media was added so we sent a signal to updated List view
             self.model.layoutChanged.emit()
+
+    """------------------------</File functions>----------------------------"""
+
+
+    """------------------<Media player functions>---------------------------"""
 
     def playVideo(self):
         """"
@@ -222,7 +544,7 @@ class MainWindow(QMainWindow):
 
     def positionChange(self,position):
         """
-            This function is activatet when the video is
+            This function is activated when the video is
             changing the time.When that happens is updating
             the Time slider the new position and the time label.
         """
@@ -230,6 +552,11 @@ class MainWindow(QMainWindow):
         #Convert position into seconds
         duration = position/1000
         self.videoTimeDisplay.setText(self.convert(duration))
+        if(self.lockButtonStart.isChecked() == False):
+            self.cutStart.setText(self.convert(duration))
+        if(self.lockButtonFinish.isChecked() == False):
+            self.cutFinish.setText(self.convert(duration))
+
 
     def durationChange(self,duration):
         """
@@ -303,7 +630,15 @@ class MainWindow(QMainWindow):
         self.speed = 1
         self.mediaPlayer.setPlaybackRate(self.speed)
         self.speedLabel.setText(str(self.speed)+"x")
-        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[self.curentIndex])))
+        try:
+            self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[self.curentIndex])))
+            #Reset cut text and icon
+            self.restCutButtons()
+        except:
+            print("Error in  playlist_selection_changed function.Media player couldn't be updated")
+
+
+
 
 
     def playlist_position_changed(self, i):
@@ -328,6 +663,10 @@ class MainWindow(QMainWindow):
                 try:
                     #Delete media from index "curentIndex"
                     self.playlist.removeMedia(self.curentIndex)
+
+                    #Delete video from concatenate ComboBox
+                    self.concatenateVideoList.removeItem(self.curentIndex)
+
                     try:
                         #Delete the file name from index "curentIndex" from curentFiles
                         del self.curentFiles[self.curentIndex]
@@ -385,7 +724,7 @@ class MainWindow(QMainWindow):
         #curentFiles files is updated to the new dictionary of files
         self.curentFiles =  newCurentFiles.copy()
 
-
+        """------------------</Media player functions>-----------------------"""
 
         def closeEvent(self, event):
             """
