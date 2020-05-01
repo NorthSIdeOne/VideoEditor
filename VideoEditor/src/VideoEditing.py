@@ -58,18 +58,7 @@ class Panel():
         except:
             print("Something went wrong with concat method from Panel class")
     def cut(self,videoList,t1,t2):
-         try:
-            obj = Movie(videoList[0])
-            name = videoList[0].split("/")
-            save_path = path
-            save_path = save_path + name[-1]
-            print(t1)
-            print(t2)
-            print(save_path)
-            obj.cut(t1,t2,save_path)
-
-            return save_path
-         except:
-            print("Something went wrong with cut method from Panel class")
+        return videoList[0]
     def video_resize(self,videoList,res):
-        return videoList
+        print(res)
+        return videoList[0]

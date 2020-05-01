@@ -197,7 +197,7 @@ class MainWindow(QMainWindow):
         #Resoluiton ComboBox for selecting the desired resolution
         self.ResolutionsList.currentIndexChanged.connect(self.changeResolutionDisplay)
         #Change resolution button
-        self.changeResolution.clicked.connect(self.changeResolutionF)
+        self.changeResolution.clicked.connect(self. changeResolutionThread)
         """</Resoluton>"""
 
 
@@ -213,9 +213,14 @@ class MainWindow(QMainWindow):
 
         """-------------------<Threads for editing>--------------------------"""
 
-        self.concatenateThread = QThreadPool()
-        self.cutThread         = QThreadPool()
-        self.resizeThread      = QThreadPool()
+        #self.concatenateThread = QThreadPool()
+        #self.pool = QThreadPool()
+        #self.pool.setMaxThreadCount(8)
+        self.pool = QThreadPool()
+        #self.cutThread = concatenateThread(self.cutFunction)
+        #self.concatenateThread.setExpiryTimeout(-1)
+        #self.cutThread         = QThreadPool()
+        #self.resizeThread      = QThreadPool()
 
         """-------------------</Threads for editing>--------------------------"""
 
@@ -336,7 +341,8 @@ class MainWindow(QMainWindow):
 
     def concatenateThreadFunction(self):
             worker = Worker(self.concatenate)
-            self.concatenateThread.start(worker)
+            self.pool.start(worker)
+
 
     """-------------------</Concatenate functions>--------------------------"""
 
@@ -378,7 +384,7 @@ class MainWindow(QMainWindow):
             self.lockButtonChangeIconStart()
             self.lockButtonChangeIconFinish()
 
-    def cutVideo(self):
+    def cutFunction(self):
             """
                 Function used for cut a video from
                 'start' to 'finish' and replace in the
@@ -402,16 +408,18 @@ class MainWindow(QMainWindow):
                             #Set the new video
                             self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
                             #Reset all values for cut function
-                            self.restCutButtons()
+
                         except:
-                            print("Problem in cutVideo at self.edit.cut or mediaPlayer")
+                            print("Problem in  at self.edit.cut or mediaPlayer")
             except:
-                print("Problem in cutVideo function")
+                print("Problem in cutFunction function")
 
 
     def cutThreadFunction(self):
-           worker = Worker(self.cutVideo)
-           self.cutThread.start(worker)
+           worker = Worker(self.cutFunction)
+           worker.signals.finished.connect(self.restCutButtons)
+           self.pool.start(worker)
+
 
     """-----------------------</Cut functions>-------------------------------"""
 
@@ -445,6 +453,10 @@ class MainWindow(QMainWindow):
             self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
         except:
             print("Problem in change resolution")
+
+    def changeResolutionThread(self):
+           worker = Worker(self.changeResolutionF)
+           self.pool.start(worker)
 
     def changeResolutionDisplay(self):
         """
