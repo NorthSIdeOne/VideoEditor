@@ -13,7 +13,9 @@ import sys
 from qtimeline import QTimeLine
 from VideoEditing import Panel
 from Multithreading import Worker
-
+import mimetypes
+import numpy as np
+import cv2
 
 class PlaylistModel(QAbstractListModel):
     def __init__(self, playlist, *args, **kwargs):
@@ -55,6 +57,14 @@ class MainWindow(QMainWindow):
         """</Objects>"""
 
         """--------------------<Global variables>----------------------------"""
+        #Thread manager variable
+        self.threadmanager = True
+        #Audio file holder
+        self.audioFile = ''
+        #frame time variable
+        self.frameTime = ''
+        #frame file path
+        self.frameFilePath = ''
         #Total number of curent media opened
         self.totalIndex = -1
         #Dictionary for index and path for the media
@@ -205,6 +215,30 @@ class MainWindow(QMainWindow):
         #Mirror button
         self.mirroringButton.clicked.connect(self.mirrorVideo)
         """</Mirror>"""
+
+        """<Audio replace>"""
+
+        self.openAudioFile.clicked.connect(self.openAudio)
+        self.removeAudioFile.clicked.connect(self.removeAudioFileFunction)
+        self.audioModeSelect.currentIndexChanged.connect(self.changeAudioBackground)
+        self.AddAudio.clicked.connect(self.SoundReplaceThread)
+        """</Audio replace>"""
+
+        """<GetFrame>"""
+
+        self.getFrameButton.clicked.connect(self.GetFrameFunction)
+        #self.saveFrameButton.setShortcut("Ctrl+S")
+        self.saveFrameButton.setStatusTip('Save File')
+        self.saveFrameButton.clicked.connect(self.saveFrame)
+        """"</GetFrame>"""
+
+        """<AddSubtitles>"""
+
+        self.loadSubtitles.clicked.connect(self.loadSubtitlesFunction)
+        self.cleanButton.clicked.connect(self.removeSubtitlesFunction)
+        self.addSubtitle.clicked.connect(self.addSubtitlesThread)
+        """</AddSubtitles>"""
+
         """         -------------</Edit  Buttons>-----------------            """
 
         """-----------------</Buttons connections>----------------------------"""
@@ -213,14 +247,7 @@ class MainWindow(QMainWindow):
 
         """-------------------<Threads for editing>--------------------------"""
 
-        #self.concatenateThread = QThreadPool()
-        #self.pool = QThreadPool()
-        #self.pool.setMaxThreadCount(8)
         self.pool = QThreadPool()
-        #self.cutThread = concatenateThread(self.cutFunction)
-        #self.concatenateThread.setExpiryTimeout(-1)
-        #self.cutThread         = QThreadPool()
-        #self.resizeThread      = QThreadPool()
 
         """-------------------</Threads for editing>--------------------------"""
 
@@ -339,9 +366,7 @@ class MainWindow(QMainWindow):
             #curentFiles files is updated to the new dictionary of files
             self.concatenateVideos =  newCurentFiles.copy()
 
-    def concatenateThreadFunction(self):
-            worker = Worker(self.concatenate)
-            self.pool.start(worker)
+
 
 
     """-------------------</Concatenate functions>--------------------------"""
@@ -415,10 +440,7 @@ class MainWindow(QMainWindow):
                 print("Problem in cutFunction function")
 
 
-    def cutThreadFunction(self):
-           worker = Worker(self.cutFunction)
-           worker.signals.finished.connect(self.restCutButtons)
-           self.pool.start(worker)
+
 
 
     """-----------------------</Cut functions>-------------------------------"""
@@ -454,9 +476,7 @@ class MainWindow(QMainWindow):
         except:
             print("Problem in change resolution")
 
-    def changeResolutionThread(self):
-           worker = Worker(self.changeResolutionF)
-           self.pool.start(worker)
+
 
     def changeResolutionDisplay(self):
         """
@@ -477,6 +497,125 @@ class MainWindow(QMainWindow):
 
     """-----------------------</Resoluton functions>--------------------------"""
 
+
+    """-----------------------<Sound Repalce functions>--------------------------"""
+
+    def openAudio(self):
+        try:
+            fileName = QFileDialog.getOpenFileName(self,"Open Audio")
+            mimetypes.init()
+            mimestart = mimetypes.guess_type(fileName[0])[0]
+
+            if mimestart != None:
+                mimestart = mimestart.split('/')[0]
+                if mimestart == 'audio':
+                    print("Audio file detected")
+                    self.audioFile = fileName[0]
+                    self.audioFileCheck.setIcon(QIcon("../resources/icons/GUI_Icons/check.png"))
+                else:
+                    print("Non audio file detected")
+            else:
+                print("Not accepted file")
+        except:
+            print("Problem in open audio function")
+
+    def removeAudioFileFunction(self):
+        self.audioFile = ''
+        self.audioFileCheck.setIcon(QIcon("../resources/icons/GUI_Icons/ezgif-7-e04c11fb7018.png"))
+
+    def changeAudioBackground(self):
+        if(self.audioModeSelect.currentIndex() == 0):
+            self.aduioModeImage.setPixmap(QPixmap("../resources/img/soundAdd.png"))
+        elif(self.audioModeSelect.currentIndex() == 1):
+            self.aduioModeImage.setPixmap(QPixmap("../resources/img/soundReplace.png"))
+
+    def SoundReplaceFunction(self):
+        if(self.curentIndex == -1 and self.totalIndex != -1):
+            self.curentIndex = 0
+        audioMode = self.audioModeSelect.currentText()
+        try:
+            if(self.audioFile != ''):
+                if(self.totalIndex != -1):
+                    indexOfRootVideo = self.curentIndex
+                    self.curentFiles[indexOfRootVideo] = self.edit.soundReplace([self.curentFiles[indexOfRootVideo]],[self.audioFile],[audioMode])
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
+                else:
+                    print("No video uploaded")
+            else:
+                print("No aduio file uploaded")
+        except:
+            print("Problem in SoundReplaceFunction")
+
+    """-----------------------</Sound Repalce functions>-------------------------"""
+
+    """-----------------------<GetFrame functions>-------------------------"""
+    def GetFrameFunction(self):
+        if(self.curentIndex == -1 and self.totalIndex != -1):
+            self.curentIndex = 0
+        try:
+            if(self.totalIndex != -1 and self.frameTime != ''):
+                indexOfRootVideo = self.curentIndex
+                self.frameFilePath = self.edit.getFrame([self.curentFiles[indexOfRootVideo]],[self.frameTime])
+                self.extractedFrame.setPixmap(QPixmap(self.frameFilePath))
+            else:
+                print("No video uploaded or frameTime is empty")
+
+        except:
+            print("Problem in GetFrameFunction")
+
+    def saveFrame(self):
+        try:
+            fileName = QFileDialog.getSaveFileName(self, 'Save File',"img.jpg", '*.jpg')
+            img = cv2.imread(self.frameFilePath)
+            cv2.imwrite(fileName[0],img)
+        except:
+            print("Problem during saving image")
+    """-----------------------</GetFrame functions>-------------------------"""
+
+    """-----------------------<Add Subtitles functions>-----------------------"""
+
+    def loadSubtitlesFunction(self):
+        try:
+            fileName = QFileDialog.getOpenFileName(self,"Open Subtitles")
+            mimetypes.init()
+            mimestart = mimetypes.guess_type(fileName[0])[0]
+
+            if mimestart != None:
+                mimestart = mimestart.split('/')[0]
+                if mimestart == 'text':
+                    print("Text file detected")
+                    self.subtitlesFile = fileName[0]
+                    self.subtitlesCheck.setIcon(QIcon("../resources/icons/GUI_Icons/check.png"))
+                else:
+                    print("Non text file detected")
+            else:
+                print("Not accepted file")
+        except:
+            print("Problem in load Subtitles function")
+
+    def removeSubtitlesFunction(self):
+        self.subtitlesFile = ''
+        self.subtitlesCheck.setIcon(QIcon("../resources/icons/GUI_Icons/ezgif-7-e04c11fb7018.png"))
+
+
+    def addSubtitlesFunction(self):
+        if(self.curentIndex == -1 and self.totalIndex != -1):
+            self.curentIndex = 0
+        try:
+            if(self.subtitlesFile != ''):
+                if(self.totalIndex != -1):
+                    indexOfRootVideo = self.curentIndex
+                    self.curentFiles[indexOfRootVideo] = self.edit.addSubtitles([self.curentFiles[indexOfRootVideo]],[self.subtitlesFile])
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
+                else:
+                    print("No video uploaded")
+            else:
+                print("No subtitles file uploaded")
+        except:
+            print("Problem in addSubtitlesFunction")
+
+
+    """-----------------------</Add Subtitles functions>----------------------"""
 
     """--------------------------<File functions>----------------------------"""
     def openFile(self):
@@ -563,6 +702,7 @@ class MainWindow(QMainWindow):
         self.videoTimeSlider.setValue(position)
         #Convert position into seconds
         duration = position/1000
+        self.frameTime = self.convert(duration)
         self.videoTimeDisplay.setText(self.convert(duration))
         if(self.lockButtonStart.isChecked() == False):
             self.cutStart.setText(self.convert(duration))
@@ -738,7 +878,129 @@ class MainWindow(QMainWindow):
 
         """------------------</Media player functions>-----------------------"""
 
-        def closeEvent(self, event):
+        """----------------------<Thread functions>--------------------------"""
+
+    """---<Concatenate>---"""
+    def concatenateThreadFunction(self):
+            #If is true that means that no thread is running and can start a thread
+            if(self.threadmanager == True):
+                try:
+                    #If is false that means that a thread is already executing
+                    self.threadmanager = False
+                    worker = Worker(self.concatenate)
+                    #When the thread is done threadmanager will be True
+                    worker.signals.finished.connect(self.ReleaseThread)
+                    self.pool.start(worker)
+                except:
+                    print("Problem with concatenate thread")
+            else:
+                print("A thread is already running")
+
+    """---</Concatenate>---"""
+
+    """---<Cut>---"""
+    def cutThreadFunction(self):
+           if(self.threadmanager == True):
+               try:
+                   self.threadmanager = False
+                   worker = Worker(self.cutFunction)
+                   worker.signals.finished.connect(self.restCutButtons)
+                   worker.signals.finished.connect(self.ReleaseThread)
+                   self.pool.start(worker)
+               except:
+                   print("Problem with cut thread")
+           else:
+               print("A thread is already running")
+
+    """---</Cut>---"""
+
+    """---<Resolution>---"""
+    def changeResolutionThread(self):
+        if(self.threadmanager == True):
+           try:
+               self.threadmanager = False
+               worker = Worker(self.changeResolutionF)
+               worker.signals.finished.connect(self.ReleaseThread)
+               self.pool.start(worker)
+           except:
+               print("Problem with resolution thread")
+        else:
+            print("A thread is already running")
+
+    """---</Resolution>---"""
+
+    """---<Mirror>---"""
+
+    def mirrorThread(self):
+        if(self.threadmanager == True):
+           try:
+               self.threadmanager = False
+               worker = Worker(self.mirrorVideo)
+               worker.signals.finished.connect(self.ReleaseThread)
+               self.pool.start(worker)
+           except:
+               print("Problem with mirror thread")
+        else:
+           print("A thread is already running")
+
+    """---</Mirror>---"""
+
+    """---<SoundReplace>---"""
+    def SoundReplaceThread(self):
+        if(self.threadmanager == True):
+           try:
+               self.threadmanager = False
+               worker = Worker(self.SoundReplaceFunction)
+               worker.signals.finished.connect(self.ReleaseThread)
+               worker.signals.finished.connect(self.removeAudioFileFunction)
+               self.pool.start(worker)
+           except:
+               print("Problem with SoundReplace thread")
+        else:
+           print("A thread is already running")
+
+    """---</SoundReplace>---"""
+    def ReleaseThread(self):
+            self.threadmanager = True
+
+    """---<GetFrame>---"""
+
+    def GetFrameThread(self):
+        if(self.threadmanager == True):
+           try:
+               self.threadmanager = False
+               worker = Worker(self.GetFrameFunction)
+               worker.signals.finished.connect(self.ReleaseThread)
+               self.pool.start(worker)
+           except:
+               print("Problem with getFrame thread")
+        else:
+           print("A thread is already running")
+
+
+    """---</GetFrame>---"""
+
+    """---<AddSubtitles>---"""
+
+    def addSubtitlesThread(self):
+        if(self.threadmanager == True):
+           try:
+               self.threadmanager = False
+               worker = Worker(self.addSubtitlesFunction)
+               worker.signals.finished.connect(self.ReleaseThread)
+               worker.signals.finished.connect(self.removeSubtitlesFunction)
+               self.pool.start(worker)
+           except:
+               print("Problem with add subtitles thread")
+        else:
+           print("A thread is already running")
+
+
+    """---</AddSubtitles>--"""
+
+    """---------------------</Thread functions>--------------------------"""
+
+    def closeEvent(self, event):
             """
                 Popup a dialog when the user is trying to close the main app.
             """

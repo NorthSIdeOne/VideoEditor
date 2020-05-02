@@ -62,3 +62,22 @@ class Panel():
     def video_resize(self,videoList,res):
         print(res)
         return videoList[0]
+
+    def video_mirroring(self,videoList):
+        print("Mirroring:   " + videoList[0])
+        return videoList[0]
+
+    def soundReplace(self,videoList,audioList,mode):
+        print(videoList[0])
+        return videoList[0]
+    def getFrame(self,videoList,time):
+        print("Video:  " + videoList[0])
+        print("Time:   "+time[0])
+        if(int(time[0].split(':')[-1]) > 20 ):
+            return "C:\\Users\\Stefan\\Pictures\\806641-yamaha-r1-wallpaper-1920x1200-tablet.jpg"
+        else:
+            return "C:\\Users\\Stefan\\Pictures\\806656-free-yamaha-r1-wallpaper-2560x1440-large-resolution.jpg"
+    def addSubtitles(self,videoList,subFile):
+        print(videoList[0])
+        print(subFile[0])
+        return videoList[0]

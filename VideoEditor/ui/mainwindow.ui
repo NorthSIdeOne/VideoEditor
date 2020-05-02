@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1423</width>
-    <height>1004</height>
+    <width>1223</width>
+    <height>1018</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -475,15 +475,15 @@ QToolBox QScrollArea QWidget QWidget {
 }</string>
                 </property>
                 <property name="currentIndex">
-                 <number>4</number>
+                 <number>6</number>
                 </property>
                 <widget class="QWidget" name="Concatenate">
                  <property name="geometry">
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>246</width>
-                   <height>365</height>
+                   <width>118</width>
+                   <height>183</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -1094,8 +1094,8 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>246</width>
-                   <height>345</height>
+                   <width>162</width>
+                   <height>188</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -1473,7 +1473,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>365</height>
+                   <height>345</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -1991,8 +1991,8 @@ QPushButton:focus {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>246</width>
-                   <height>365</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2097,7 +2097,7 @@ QPushButton:focus {
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>365</height>
+                   <height>359</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2135,7 +2135,7 @@ QPushButton:focus {
                     <property name="frameShadow">
                      <enum>QFrame::Raised</enum>
                     </property>
-                    <widget class="QLabel" name="label_5">
+                    <widget class="QLabel" name="aduioModeImage">
                      <property name="geometry">
                       <rect>
                        <x>10</x>
@@ -2164,16 +2164,16 @@ QPushButton:focus {
                      <property name="geometry">
                       <rect>
                        <x>0</x>
-                       <y>240</y>
+                       <y>247</y>
                        <width>245</width>
-                       <height>98</height>
+                       <height>91</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_13">
                       <item>
                        <layout class="QHBoxLayout" name="horizontalLayout_17">
                         <item>
-                         <widget class="QComboBox" name="comboBox_2">
+                         <widget class="QComboBox" name="audioModeSelect">
                           <property name="styleSheet">
                            <string notr="true">QComboBox
 {
@@ -2267,7 +2267,7 @@ QComboBox::down-arrow, QSpinBox::down-arrow, QTimeEdit::down-arrow, QDateEdit::d
                          </widget>
                         </item>
                         <item>
-                         <widget class="QToolButton" name="toolButton_3">
+                         <widget class="QToolButton" name="openAudioFile">
                           <property name="styleSheet">
                            <string notr="true">QToolButton {
    background-color: #505F69;
@@ -2371,7 +2371,7 @@ QToolButton::menu-arrow:hover {
                          </widget>
                         </item>
                         <item>
-                         <widget class="QPushButton" name="pushButton_20">
+                         <widget class="QPushButton" name="audioFileCheck">
                           <property name="minimumSize">
                            <size>
                             <width>36</width>
@@ -2416,9 +2416,11 @@ QToolButton::menu-arrow:hover {
                        </layout>
                       </item>
                       <item>
-                       <widget class="QPushButton" name="pushButton_21">
-                        <property name="styleSheet">
-                         <string notr="true">QPushButton {
+                       <layout class="QHBoxLayout" name="horizontalLayout_20">
+                        <item>
+                         <widget class="QPushButton" name="AddAudio">
+                          <property name="styleSheet">
+                           <string notr="true">QPushButton {
   background-color: #505F69;
   border: 1px solid #32414B;
   color: #F0F0F0;
@@ -2492,11 +2494,96 @@ QPushButton:hover {
 QPushButton:focus {
   border: 1px solid #1464A0;
 }</string>
-                        </property>
-                        <property name="text">
-                         <string>Add Audio</string>
-                        </property>
-                       </widget>
+                          </property>
+                          <property name="text">
+                           <string>Add Audio</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QPushButton" name="removeAudioFile">
+                          <property name="styleSheet">
+                           <string notr="true">QPushButton {
+  background-color: #505F69;
+  border: 1px solid #32414B;
+  color: #F0F0F0;
+  border-radius: 4px;
+  padding: 3px;
+  outline: none;
+  /* Issue #194 - Special case of QPushButton inside dialogs, for better UI */
+  min-width: 80px;
+}
+
+QPushButton:disabled {
+  background-color: #32414B;
+  border: 1px solid #32414B;
+  color: #787878;
+  border-radius: 4px;
+  padding: 3px;
+}
+
+QPushButton:checked {
+  background-color: #32414B;
+  border: 1px solid #32414B;
+  border-radius: 4px;
+  padding: 3px;
+  outline: none;
+}
+
+QPushButton:checked:disabled {
+  background-color: #19232D;
+  border: 1px solid #32414B;
+  color: #787878;
+  border-radius: 4px;
+  padding: 3px;
+  outline: none;
+}
+
+QPushButton:checked:selected {
+  background: #1464A0;
+  color: #32414B;
+}
+
+QPushButton::menu-indicator {
+  subcontrol-origin: padding;
+  subcontrol-position: bottom right;
+  bottom: 4px;
+}
+
+QPushButton:pressed {
+  background-color: #19232D;
+  border: 1px solid #19232D;
+}
+
+QPushButton:pressed:hover {
+  border: 1px solid #148CD2;
+}
+
+QPushButton:hover {
+  border: 1px solid #148CD2;
+  color: #F0F0F0;
+}
+
+QPushButton:selected {
+  background: #1464A0;
+  color: #32414B;
+}
+
+QPushButton:hover {
+  border: 1px solid #148CD2;
+  color: #F0F0F0;
+}
+
+QPushButton:focus {
+  border: 1px solid #1464A0;
+}</string>
+                          </property>
+                          <property name="text">
+                           <string>Remove audio file</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
                       </item>
                      </layout>
                     </widget>
@@ -2510,7 +2597,7 @@ QPushButton:focus {
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>365</height>
+                   <height>359</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2550,7 +2637,7 @@ QPushButton:focus {
                    </property>
                    <layout class="QHBoxLayout" name="horizontalLayout_13">
                     <item>
-                     <widget class="QPushButton" name="pushButton_5">
+                     <widget class="QPushButton" name="getFrameButton">
                       <property name="minimumSize">
                        <size>
                         <width>36</width>
@@ -2582,7 +2669,7 @@ QPushButton:focus {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButton_4">
+                     <widget class="QPushButton" name="saveFrameButton">
                       <property name="minimumSize">
                        <size>
                         <width>40</width>
@@ -2628,7 +2715,7 @@ QPushButton:focus {
                     </item>
                    </layout>
                   </widget>
-                  <widget class="QLabel" name="label_3">
+                  <widget class="QLabel" name="extractedFrame">
                    <property name="geometry">
                     <rect>
                      <x>10</x>
@@ -2655,7 +2742,7 @@ QPushButton:focus {
                    <x>0</x>
                    <y>0</y>
                    <width>246</width>
-                   <height>365</height>
+                   <height>359</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2716,14 +2803,14 @@ QPushButton:focus {
                      <property name="geometry">
                       <rect>
                        <x>0</x>
-                       <y>280</y>
+                       <y>287</y>
                        <width>241</width>
                        <height>61</height>
                       </rect>
                      </property>
                      <layout class="QHBoxLayout" name="horizontalLayout_14">
                       <item>
-                       <widget class="QPushButton" name="pushButton_12">
+                       <widget class="QPushButton" name="addSubtitle">
                         <property name="styleSheet">
                          <string notr="true">QPushButton {
   background-color: #505F69;
@@ -2806,7 +2893,7 @@ QPushButton:focus {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QToolButton" name="toolButton">
+                       <widget class="QToolButton" name="loadSubtitles">
                         <property name="styleSheet">
                          <string notr="true">QToolButton {
    background-color: #505F69;
@@ -2910,7 +2997,50 @@ QToolButton::menu-arrow:hover {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QPushButton" name="pushButton_16">
+                       <widget class="QPushButton" name="cleanButton">
+                        <property name="minimumSize">
+                         <size>
+                          <width>36</width>
+                          <height>36</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>36</width>
+                          <height>36</height>
+                         </size>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QPushButton {
+    color: #333;
+    border: 0px solid #555;
+    border-radius: 18px;
+    border-style: outset;
+    padding: 5px;
+    }
+
+</string>
+                        </property>
+                        <property name="text">
+                         <string/>
+                        </property>
+                        <property name="icon">
+                         <iconset>
+                          <normaloff>../resources/icons/GUI_Icons/clear.png</normaloff>../resources/icons/GUI_Icons/clear.png</iconset>
+                        </property>
+                        <property name="iconSize">
+                         <size>
+                          <width>32</width>
+                          <height>32</height>
+                         </size>
+                        </property>
+                        <property name="flat">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="subtitlesCheck">
                         <property name="minimumSize">
                          <size>
                           <width>36</width>
@@ -2963,8 +3093,8 @@ QToolButton::menu-arrow:hover {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>246</width>
-                   <height>365</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -4466,8 +4596,8 @@ border-radius: 5px;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1423</width>
-     <height>21</height>
+     <width>1223</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFiles">
