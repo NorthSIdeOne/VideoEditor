@@ -1,11 +1,18 @@
-from Class_V1 import Movie
+from MovieClass import Movie
+import re
+import os
+import FoldersConfig
 
-path = "C:/MY FILES/Proiect_AM/VideoEditor/VideoEditor/tmp/"
+path = FoldersConfig.tmpDir.split("\\")
+path = "/".join(path)
+#path ="C:/MY FILES/Proiect_AM/VideoEditor/VideoEditor/tmp/"
 obj_list = []
-width_list = []
+width_list =[]
+
+
 
 class Panel():
-    def __init__(self, *args, **kwargs):
+    def __init__(self,*args, **kwargs):
         self.test = -1
 
 
@@ -57,27 +64,129 @@ class Panel():
 
         except:
             print("Something went wrong with concat method from Panel class")
-    def cut(self,videoList,t1,t2):
-        return videoList[0]
-    def video_resize(self,videoList,res):
-        print(res)
-        return videoList[0]
+            return url_list[0]
 
-    def video_mirroring(self,videoList):
-        print("Mirroring:   " + videoList[0])
-        return videoList[0]
+    def cut(self,url_list,time_list):
+        try:
+            if len(url_list) > 0 and len(time_list) == 2 :
+                movie = Movie(url_list[0])
+                name = url_list[0].split("/")
+                save_path = path
+                save_path = save_path + name[-1]
+                temp1 = time_list[0]
+                temp2 = time_list[1]
+                temp1 = temp1.split(":")
+                temp2 = temp2.split(":")
+                t1 = 3600*int(temp1[0]) + 60*int(temp1[1]) + int(temp1[2])
+                t2 = 3600*int(temp2[0]) + 60*int(temp2[1]) + int(temp2[2])
+                if t1 < t2:
+                    movie.cut(t1,t2,save_path)
+                else:
+                    print("Cei doi parametrii au fost introdusi in ordine inversa sau sunt egali!!!")
 
-    def soundReplace(self,videoList,audioList,mode):
-        print(videoList[0])
-        return videoList[0]
-    def getFrame(self,videoList,time):
-        print("Video:  " + videoList[0])
-        print("Time:   "+time[0])
-        if(int(time[0].split(':')[-1]) > 20 ):
-            return "C:\\Users\\Stefan\\Pictures\\806641-yamaha-r1-wallpaper-1920x1200-tablet.jpg"
-        else:
-            return "C:\\Users\\Stefan\\Pictures\\806656-free-yamaha-r1-wallpaper-2560x1440-large-resolution.jpg"
-    def addSubtitles(self,videoList,subFile):
-        print(videoList[0])
-        print(subFile[0])
-        return videoList[0]
+                return save_path
+
+            else:
+                print("The list is empty")
+        except:
+            print("Something went wrong with cut method from Panel class")
+            return url_list[0]
+
+    def video_resize(self,url_list,resolution):
+        try:
+            if len(url_list) > 0:
+                movie = Movie(url_list[0])
+                name = url_list[0].split("/")
+
+                dim = movie.clip.size
+                print(dim)
+                if int(resolution) < dim[1]:
+                    print("If?")
+                    save_path = path
+                    save_path = save_path + name[-1]
+                    resolution = int(resolution)
+                    try:
+                        movie.video_resize(resolution,save_path)
+                    except:
+                        return url_list[0]
+                    return save_path
+
+                else:
+                    print("Valoarea pe care ati introdus-o este mai mare sau egala cu rezolutia actuala a videoclipului")
+                    print("Va rugam sa introduceti o valoare strict mai mica decat rezolutia videoclipului")
+                    return url_list[0]
+
+            else:
+                print("The list is empty")
+                return url_list[0]
+        except:
+            print("Something went wrong with video_resize method from Panel class")
+            return url_list[0]
+
+    def video_mirroring(self,url_list):
+        try:
+            if len(url_list) > 0:
+                movie = Movie(url_list[0])
+                name = url_list[0].split("/")
+                save_path = path
+                save_path = save_path + name[-1]
+                movie.video_mirroring(save_path)
+                return save_path
+
+            else:
+                print("The list is empty")
+        except:
+            print("Something went wrong with video_mirroring method from Panel class")
+            return url_list[0]
+
+    def soundReplace(self,url_list,audio_file,mode):
+        try:
+            if len(url_list) > 0 :
+                movie = Movie(url_list[0])
+                name = url_list[0].split("/")
+                save_path = path
+                save_path = save_path + name[-1]
+                movie.sound_replace(audio_file,save_path,mode)
+
+                return save_path
+
+            else:
+                print("The list is empty")
+        except:
+            print("Something went wrong with sound_replace method from Panel class")
+            return url_list[0]
+
+    def getFrame(self,url_list,time):
+
+        try:
+            if len(url_list) > 0 :
+                movie = Movie(url_list[0])
+                name = url_list[0].split("/")
+                name2 = name[-1]
+                name2 = name2.split(".")
+                save_path = path
+                save_path = save_path + name2[0] + ".jpg"
+                movie.get_frame(time,save_path)
+
+                return save_path
+
+            else:
+                print("The list is empty")
+        except:
+            print("Something went wrong with get_frame method from Panel class")
+
+    def addSubtitles(self,url_list,subtitle_file):
+        try:
+            if len(url_list) > 0 :
+                movie = Movie(url_list[0])
+                name = url_list[0].split("/")
+                save_path = path
+                save_path = save_path + name[-1]
+                movie.add_subtitle(subtitle_file,save_path)
+
+                return save_path
+
+            else:
+                print("The list is empty")
+        except:
+            print("Something went wrong with add_subtitle method from Panel class")

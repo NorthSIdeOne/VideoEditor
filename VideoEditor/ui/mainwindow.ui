@@ -86,11 +86,33 @@
            <number>0</number>
           </property>
           <item>
+           <spacer name="horizontalSpacer_21">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Preferred</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QPushButton" name="addButton">
             <property name="minimumSize">
              <size>
               <width>0</width>
               <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
              </size>
             </property>
             <property name="styleSheet">
@@ -120,11 +142,33 @@ background-color: #353738
            </widget>
           </item>
           <item>
+           <spacer name="horizontalSpacer_22">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Preferred</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QPushButton" name="deleteButton">
             <property name="minimumSize">
              <size>
               <width>0</width>
               <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
              </size>
             </property>
             <property name="text">
@@ -146,46 +190,78 @@ background-color: #353738
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_13">
-            <property name="minimumSize">
+           <spacer name="horizontalSpacer_19">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Preferred</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
              <size>
-              <width>0</width>
-              <height>15</height>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="saveVideo">
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
              </size>
             </property>
             <property name="text">
-             <string>PushButton</string>
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../resources/icons/GUI_Icons/direct-download.png</normaloff>../resources/icons/GUI_Icons/direct-download.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_15">
-            <property name="minimumSize">
+           <spacer name="horizontalSpacer_18">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Preferred</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
              <size>
-              <width>0</width>
+              <width>40</width>
               <height>20</height>
              </size>
             </property>
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_14">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>20</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
+           </spacer>
           </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_20">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
         <widget class="QFrame" name="mbEmptyFrame">
@@ -475,15 +551,15 @@ QToolBox QScrollArea QWidget QWidget {
 }</string>
                 </property>
                 <property name="currentIndex">
-                 <number>6</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="Concatenate">
                  <property name="geometry">
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>118</width>
-                   <height>183</height>
+                   <width>246</width>
+                   <height>359</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -1094,8 +1170,8 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>162</width>
-                   <height>188</height>
+                   <width>246</width>
+                   <height>359</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -1472,8 +1548,8 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>246</width>
-                   <height>345</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2096,8 +2172,8 @@ QPushButton:focus {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>246</width>
-                   <height>359</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2741,8 +2817,8 @@ QPushButton:focus {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>246</width>
-                   <height>359</height>
+                   <width>100</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -4278,11 +4354,176 @@ border-radius: 4px;
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="pushButton_6">
+              <widget class="QPushButton" name="soundShortcut">
                <property name="minimumSize">
                 <size>
-                 <width>50</width>
-                 <height>40</height>
+                 <width>32</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../resources/icons/GUI_Icons/music.png</normaloff>../resources/icons/GUI_Icons/music.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>32</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_17">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="getFrameShortcut">
+               <property name="maximumSize">
+                <size>
+                 <width>32</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../resources/icons/GUI_Icons/image.png</normaloff>../resources/icons/GUI_Icons/image.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>32</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_15">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="cutShortcut">
+               <property name="maximumSize">
+                <size>
+                 <width>32</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../resources/icons/GUI_Icons/cut-50 (2).png</normaloff>../resources/icons/GUI_Icons/cut-50 (2).png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>32</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_14">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="concatShortcut">
+               <property name="maximumSize">
+                <size>
+                 <width>32</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>../resources/icons/GUI_Icons/icons8-merge-files-64.png</normaloff>../resources/icons/GUI_Icons/icons8-merge-files-64.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>32</width>
+                 <height>32</height>
+                </size>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_16">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="mirrorShortcut">
+               <property name="maximumSize">
+                <size>
+                 <width>32</width>
+                 <height>32</height>
                 </size>
                </property>
                <property name="text">
@@ -4300,34 +4541,6 @@ border-radius: 4px;
                </property>
                <property name="flat">
                 <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_7">
-               <property name="text">
-                <string>PushButton</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_10">
-               <property name="text">
-                <string>PushButton</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_8">
-               <property name="text">
-                <string>PushButton</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_9">
-               <property name="text">
-                <string>PushButton</string>
                </property>
               </widget>
              </item>

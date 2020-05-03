@@ -167,6 +167,9 @@ class QTimeLine(QWidget):
 
         self.update()
 
+
+
+
     # Mouse pressed
     def mousePressEvent(self, e):
         if e.button() == Qt.LeftButton:

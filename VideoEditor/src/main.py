@@ -50,6 +50,8 @@ class MainWindow(QMainWindow):
             This function initialize all the buttons and all the setting for
             displaying and control the video.
         """
+        #delete all temp files
+        self.deleteAllTemp()
 
         """<Objects>"""
         #Object for controling all edit functions
@@ -159,7 +161,8 @@ class MainWindow(QMainWindow):
         self.addButton.clicked.connect(self.openFile)
         #Remove video button
         self.deleteButton.clicked.connect(self.RemoveVideo)
-
+        #save video
+        self.saveVideo.clicked.connect(self.saveVideoFunction)
         #Time slider
         self.videoTimeSlider.sliderMoved.connect(self.setPosition)
 
@@ -213,7 +216,7 @@ class MainWindow(QMainWindow):
 
         """<Mirror>"""
         #Mirror button
-        self.mirroringButton.clicked.connect(self.mirrorVideo)
+        self.mirroringButton.clicked.connect(self.mirrorThread)
         """</Mirror>"""
 
         """<Audio replace>"""
@@ -240,7 +243,15 @@ class MainWindow(QMainWindow):
         """</AddSubtitles>"""
 
         """         -------------</Edit  Buttons>-----------------            """
+        """         -------------<Shortcut Buttons>---------------            """
 
+        self.soundShortcut.clicked.connect(self.soundShortcutKey)
+        self.getFrameShortcut.clicked.connect(self.getFrameShortcutKey)
+        self.cutShortcut.clicked.connect(self.cutShortcutKey)
+        self.concatShortcut.clicked.connect(self.concatShortcutKey)
+        self.mirrorShortcut.clicked.connect(self.mirrorShortcutKey)
+
+        """         -------------</Shortcut Buttons>---------------            """
         """-----------------</Buttons connections>----------------------------"""
 
 
@@ -255,10 +266,13 @@ class MainWindow(QMainWindow):
         """<Experimental>"""
         qtimeline = QTimeLine(360,1)
         self.test = QVBoxLayout()
-        self.test.addWidget(qtimeline)
         qtimeline2 = QTimeLine(360,1)
+        self.test.addWidget(qtimeline)
         self.test.addWidget(qtimeline2)
+
+
         self.sfTimeLineFrame.setLayout(self.test)
+        #self.editMenu.setCurrentIndex(5)
         """</Experimental>"""
 
         #Set output to the video
@@ -293,6 +307,7 @@ class MainWindow(QMainWindow):
 
             except:
                 print("No video")
+                QMessageBox.about(self, "No video", "Please add a video!       ")
                 print(self.concatenateVideoList.currentIndex())
 
 
@@ -307,6 +322,7 @@ class MainWindow(QMainWindow):
                 self.SortFilesIndexConcat()
 
             except:
+                QMessageBox.about(self, "No video", "No video to remove or not selected!     ")
                 print("Error when removing video from list")
 
 
@@ -337,6 +353,7 @@ class MainWindow(QMainWindow):
                 self.curentFiles[indexOfRootVideo] =self.edit.concat(videosToConcatenate)
 
                 #Update the media with the edited video
+                self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("../resources/videos/blackvideo.mp4")))
                 self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
 
                 #Clear concatenate list view
@@ -429,8 +446,9 @@ class MainWindow(QMainWindow):
                             #save the current index before cut because user can change the 'curentIndex' during execution
                             indexOfRootVideo = self.curentIndex
                             #call the cut function and the result path is saved in currentFiles
-                            self.curentFiles[indexOfRootVideo] = self.edit.cut(videoList, self.cutStart.toPlainText(),self.cutFinish.toPlainText())
+                            self.curentFiles[indexOfRootVideo] = self.edit.cut(videoList, [self.cutStart.toPlainText(),self.cutFinish.toPlainText()])
                             #Set the new video
+                            self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("../resources/videos/blackvideo.mp4")))
                             self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
                             #Reset all values for cut function
 
@@ -452,8 +470,12 @@ class MainWindow(QMainWindow):
             self.curentIndex = 0
         try:
             indexOfRootVideo = self.curentIndex
-            self.curentFiles[indexOfRootVideo] = self.edit.video_mirroring([self.curentFiles[indexOfRootVideo]])
-            self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
+            result = ''
+            result = self.edit.video_mirroring([self.curentFiles[indexOfRootVideo]])
+            if(result != ''):
+                self.curentFiles[indexOfRootVideo] =result
+                self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("../resources/videos/blackvideo.mp4")))
+                self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
         except:
             print("Problem in change mirror function")
 
@@ -472,6 +494,7 @@ class MainWindow(QMainWindow):
         try:
             indexOfRootVideo = self.curentIndex
             self.curentFiles[indexOfRootVideo] = self.edit.video_resize([self.curentFiles[indexOfRootVideo]],currentResolution)
+            self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("../resources/videos/blackvideo.mp4")))
             self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
         except:
             print("Problem in change resolution")
@@ -513,10 +536,13 @@ class MainWindow(QMainWindow):
                     self.audioFile = fileName[0]
                     self.audioFileCheck.setIcon(QIcon("../resources/icons/GUI_Icons/check.png"))
                 else:
+                    QMessageBox.about(self, "Audio", "This is not an audio file.Please load an audio file..")
                     print("Non audio file detected")
             else:
+                QMessageBox.about(self, "Audio", "This file format is not accepted.")
                 print("Not accepted file")
         except:
+            QMessageBox.about(self, "Audio", "Changing sound track failed.")
             print("Problem in open audio function")
 
     def removeAudioFileFunction(self):
@@ -533,17 +559,22 @@ class MainWindow(QMainWindow):
         if(self.curentIndex == -1 and self.totalIndex != -1):
             self.curentIndex = 0
         audioMode = self.audioModeSelect.currentText()
+        print(audioMode)
         try:
             if(self.audioFile != ''):
                 if(self.totalIndex != -1):
                     indexOfRootVideo = self.curentIndex
-                    self.curentFiles[indexOfRootVideo] = self.edit.soundReplace([self.curentFiles[indexOfRootVideo]],[self.audioFile],[audioMode])
+                    self.curentFiles[indexOfRootVideo] = self.edit.soundReplace([self.curentFiles[indexOfRootVideo]],self.audioFile,audioMode)
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("../resources/videos/blackvideo.mp4")))
                     self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
                 else:
+
                     print("No video uploaded")
             else:
+
                 print("No aduio file uploaded")
         except:
+
             print("Problem in SoundReplaceFunction")
 
     """-----------------------</Sound Repalce functions>-------------------------"""
@@ -555,7 +586,9 @@ class MainWindow(QMainWindow):
         try:
             if(self.totalIndex != -1 and self.frameTime != ''):
                 indexOfRootVideo = self.curentIndex
-                self.frameFilePath = self.edit.getFrame([self.curentFiles[indexOfRootVideo]],[self.frameTime])
+                print(self.frameTime)
+                self.frameFilePath = ''
+                self.frameFilePath = self.edit.getFrame([self.curentFiles[indexOfRootVideo]],self.frameTime)
                 self.extractedFrame.setPixmap(QPixmap(self.frameFilePath))
             else:
                 print("No video uploaded or frameTime is empty")
@@ -569,6 +602,7 @@ class MainWindow(QMainWindow):
             img = cv2.imread(self.frameFilePath)
             cv2.imwrite(fileName[0],img)
         except:
+            QMessageBox.about(self, "Save image", "Problem during saving image.")
             print("Problem during saving image")
     """-----------------------</GetFrame functions>-------------------------"""
 
@@ -577,19 +611,12 @@ class MainWindow(QMainWindow):
     def loadSubtitlesFunction(self):
         try:
             fileName = QFileDialog.getOpenFileName(self,"Open Subtitles")
-            mimetypes.init()
-            mimestart = mimetypes.guess_type(fileName[0])[0]
-
-            if mimestart != None:
-                mimestart = mimestart.split('/')[0]
-                if mimestart == 'text':
-                    print("Text file detected")
-                    self.subtitlesFile = fileName[0]
-                    self.subtitlesCheck.setIcon(QIcon("../resources/icons/GUI_Icons/check.png"))
-                else:
-                    print("Non text file detected")
+            if(fileName[0].split('.')[-1] == "srt"):
+                self.subtitlesFile = fileName[0]
+                self.subtitlesCheck.setIcon(QIcon("../resources/icons/GUI_Icons/check.png"))
             else:
-                print("Not accepted file")
+                QMessageBox.about(self, "Subtitles", "Couldn't load subtitles.Please use file with .srt extension.")
+
         except:
             print("Problem in load Subtitles function")
 
@@ -605,7 +632,8 @@ class MainWindow(QMainWindow):
             if(self.subtitlesFile != ''):
                 if(self.totalIndex != -1):
                     indexOfRootVideo = self.curentIndex
-                    self.curentFiles[indexOfRootVideo] = self.edit.addSubtitles([self.curentFiles[indexOfRootVideo]],[self.subtitlesFile])
+                    self.curentFiles[indexOfRootVideo] = self.edit.addSubtitles([self.curentFiles[indexOfRootVideo]],self.subtitlesFile)
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("../resources/videos/blackvideo.mp4")))
                     self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
                 else:
                     print("No video uploaded")
@@ -630,9 +658,12 @@ class MainWindow(QMainWindow):
             self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(fileName[0])))
             #Update total number of curent media opened
             self.totalIndex = self.totalIndex + 1
+            self.curentIndex = self.totalIndex
             #Update the curentFiles dict which holds the path for the opened videos
             self.curentFiles[self.totalIndex] = fileName[0]
 
+            if(self.totalIndex == 0):
+                self.curentIndex = 0
             #Enable the play button after the video was set
             self.playButton.setEnabled(True)
             #Add media to the playlist
@@ -643,6 +674,8 @@ class MainWindow(QMainWindow):
 
             #A new media was added so we sent a signal to updated List view
             self.model.layoutChanged.emit()
+
+
 
     """------------------------</File functions>----------------------------"""
 
@@ -700,9 +733,10 @@ class MainWindow(QMainWindow):
             the Time slider the new position and the time label.
         """
         self.videoTimeSlider.setValue(position)
+
         #Convert position into seconds
         duration = position/1000
-        self.frameTime = self.convert(duration)
+        self.frameTime = int(duration)
         self.videoTimeDisplay.setText(self.convert(duration))
         if(self.lockButtonStart.isChecked() == False):
             self.cutStart.setText(self.convert(duration))
@@ -716,6 +750,7 @@ class MainWindow(QMainWindow):
             when the video position is changing.
         """
         self.videoTimeSlider.setRange(0,duration)
+
 
 
     def setPosition(self,position):
@@ -858,7 +893,17 @@ class MainWindow(QMainWindow):
             #Reset the time slider
             self.videoTimeSlider.setRange(0,0)
 
-
+    def saveVideoFunction(self):
+        try:
+            import shutil
+            extension = self.curentFiles[self.curentIndex].split('.')[-1]
+            extension = "*." + extension
+            fileName = QFileDialog.getSaveFileName(self, 'Save video',"video_name", extension)
+            shutil.move(self.curentFiles[self.curentIndex], fileName[0])
+            print("Save video Done")
+        except:
+            QMessageBox.about(self, "Save video", "Error during the video saving.")
+            print("Error during the video saving")
 
     def SortFilesIndex(self):
         """
@@ -875,6 +920,21 @@ class MainWindow(QMainWindow):
 
         #curentFiles files is updated to the new dictionary of files
         self.curentFiles =  newCurentFiles.copy()
+
+
+
+
+    def soundShortcutKey(self):
+        self.editMenu.setCurrentIndex(4)
+    def getFrameShortcutKey(self):
+        self.editMenu.setCurrentIndex(5)
+    def cutShortcutKey(self):
+        self.editMenu.setCurrentIndex(1)
+    def concatShortcutKey(self):
+        self.editMenu.setCurrentIndex(0)
+    def mirrorShortcutKey(self):
+        self.editMenu.setCurrentIndex(3)
+
 
         """------------------</Media player functions>-----------------------"""
 
@@ -962,6 +1022,7 @@ class MainWindow(QMainWindow):
     """---</SoundReplace>---"""
     def ReleaseThread(self):
             self.threadmanager = True
+            print(self.curentFiles)
 
     """---<GetFrame>---"""
 
@@ -1000,6 +1061,21 @@ class MainWindow(QMainWindow):
 
     """---------------------</Thread functions>--------------------------"""
 
+
+    def deleteAllTemp(self):
+        import os, shutil
+        folder = ProjectFolders.tmpDir
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+
     def closeEvent(self, event):
             """
                 Popup a dialog when the user is trying to close the main app.
@@ -1008,10 +1084,22 @@ class MainWindow(QMainWindow):
     				QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
             if reply == QMessageBox.Yes:
+                if(self.threadmanager == True):
+                   try:
+                       self.threadmanager = False
+                       worker = Worker(self.deleteAllTemp)
+                       worker.signals.finished.connect(self.ReleaseThread)
+                       self.pool.start(worker)
+                   except:
+                       print("Problem with getFrame thread")
+                else:
+                   print("A thread is already running")
+
                 event.accept()
                 print('Window closed')
             else:
                 event.ignore()
+
 
 app = QApplication(sys.argv)
 window = MainWindow()

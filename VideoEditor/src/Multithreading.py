@@ -12,15 +12,6 @@ class WorkerSignals(QObject):
     finished
         No data
 
-    error
-        `tuple` (exctype, value, traceback.format_exc() )
-
-    result
-        `object` data returned from processing, anything
-
-    progress
-        `int` indicating % progress
-
     '''
     finished = pyqtSignal()
 
