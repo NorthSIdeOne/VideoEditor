@@ -1,10 +1,35 @@
 from moviepy.editor import *
 from moviepy.video.tools.subtitles import SubtitlesClip
 import re # module for regular expressions
+import os
+import FoldersConfig
+import shutil
+path = FoldersConfig.tmpDir.split("\\")
+path = "/".join(path)
 
 class Movie:
     def __init__(self,url):
-        self.url = url
+
+        dirURL = url
+        dirURL = dirURL.split("/")
+        newFileName = dirURL[-1]
+        newDirectory = dirURL[-1].split('.')
+        newDirectory = newDirectory[0]
+        newPath = os.path.join(path, newDirectory)
+        try:
+            os.mkdir(newPath)
+        except:
+            print("nu se poate asa ceva")
+        print(newPath+"/")
+
+        try:
+            copyOfTheURL = newPath+"/"+newFileName
+            shutil.copyfile(url,copyOfTheURL)
+            self.url = copyOfTheURL
+        except:
+            print("Na beleaua")
+            self.url = url
+
         self.clip = VideoFileClip(url)
         self.result = None
 
@@ -98,10 +123,10 @@ class Movie:
         try:
             # async = modul de apelare utilizat atunci cand fisierul audio are o durata diferita fata de cel audio
             if mode =="Replace audio":
-                audio = AudioFileClip(audio_file)
                 time = self.clip.duration
+                audio = AudioFileClip(audio_file)
                 self.result = concatenate_videoclips([self.clip]).set_audio(audio)
-                #self.result = self.result.subclip(0,time)
+                self.result = self.result.subclip(0,time)
                 self.result.write_videofile(out_name)
 
             # sync = modul de apelare utilizat atunci cand fisierul audio si cel audio au aceeasi durata

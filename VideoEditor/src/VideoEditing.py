@@ -2,7 +2,7 @@ from MovieClass import Movie
 import re
 import os
 import FoldersConfig
-
+import shutil
 path = FoldersConfig.tmpDir.split("\\")
 path = "/".join(path)
 #path ="C:/MY FILES/Proiect_AM/VideoEditor/VideoEditor/tmp/"
