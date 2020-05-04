@@ -24,6 +24,18 @@ class Panel():
                 save_path = path
                 save_path = save_path + name[-1]
 
+                newName = name[-1].split('.')
+                newName2 = newName[0].split("_edit_")
+                try:
+                    nr = int(newName2[1])
+                    nr = nr + 1
+                    nr = str(nr)
+                except:
+                    nr = "0"
+                newSavePath = path + newName2[0] + "_edit_" + nr +"."+ newName[1]
+                print("NEW PATH:" + newSavePath)
+                save_path = newSavePath
+
                 for i in range(1,len(url_list)):
                     obj = Movie(url_list[i])
                     obj_list.append(obj.clip)
@@ -44,7 +56,7 @@ class Panel():
 
                     save_path = path
                     save_path = save_path + name[-1]
-
+                    save_path = newSavePath
                     if value == True:
                         movie.concat(save_path,*obj_list)
                     else:
@@ -79,13 +91,24 @@ class Panel():
                 temp2 = temp2.split(":")
                 t1 = 3600*int(temp1[0]) + 60*int(temp1[1]) + int(temp1[2])
                 t2 = 3600*int(temp2[0]) + 60*int(temp2[1]) + int(temp2[2])
+
+                newName = name[-1].split('.')
+                newName2 = newName[0].split("_edit_")
+                try:
+                    nr = int(newName2[1])
+                    nr = nr + 1
+                    nr = str(nr)
+                except:
+                    nr = "0"
+                newSavePath = path + newName2[0] + "_edit_" + nr +"."+ newName[1]
+                print("NEW PATH:" + newSavePath)
                 if t1 < t2:
-                    movie.cut(t1,t2,save_path)
+                    movie.cut(t1,t2,newSavePath)
                 else:
                     print("Cei doi parametrii au fost introdusi in ordine inversa sau sunt egali!!!")
 
-                return save_path
-
+                #return save_path
+                return newSavePath
             else:
                 print("The list is empty")
         except:
@@ -98,12 +121,25 @@ class Panel():
                 movie = Movie(url_list[0])
                 name = url_list[0].split("/")
 
+
                 dim = movie.clip.size
                 print(dim)
                 if int(resolution) < dim[1]:
                     print("If?")
                     save_path = path
                     save_path = save_path + name[-1]
+                    newName = name[-1].split('.')
+                    newName2 = newName[0].split("_edit_")
+                    try:
+                        nr = int(newName2[1])
+                        nr = nr + 1
+                        nr = str(nr)
+                    except:
+                        nr = "0"
+                    newSavePath = path + newName2[0] + "_edit_" + nr +"."+ newName[1]
+                    print("NEW PATH:" + newSavePath)
+                    save_path = newSavePath
+
                     resolution = int(resolution)
                     try:
                         movie.video_resize(resolution,save_path)
@@ -130,6 +166,17 @@ class Panel():
                 name = url_list[0].split("/")
                 save_path = path
                 save_path = save_path + name[-1]
+                newName = name[-1].split('.')
+                newName2 = newName[0].split("_edit_")
+                try:
+                    nr = int(newName2[1])
+                    nr = nr + 1
+                    nr = str(nr)
+                except:
+                    nr = "0"
+                newSavePath = path + newName2[0] + "_edit_" + nr +"."+ newName[1]
+                print("NEW PATH:" + newSavePath)
+                save_path = newSavePath
                 movie.video_mirroring(save_path)
                 return save_path
 
@@ -146,6 +193,17 @@ class Panel():
                 name = url_list[0].split("/")
                 save_path = path
                 save_path = save_path + name[-1]
+                newName = name[-1].split('.')
+                newName2 = newName[0].split("_edit_")
+                try:
+                    nr = int(newName2[1])
+                    nr = nr + 1
+                    nr = str(nr)
+                except:
+                    nr = "0"
+                newSavePath = path + newName2[0] + "_edit_" + nr +"."+ newName[1]
+                print("NEW PATH:" + newSavePath)
+                save_path = newSavePath
                 movie.sound_replace(audio_file,save_path,mode)
 
                 return save_path
@@ -182,6 +240,17 @@ class Panel():
                 name = url_list[0].split("/")
                 save_path = path
                 save_path = save_path + name[-1]
+                newName = name[-1].split('.')
+                newName2 = newName[0].split("_edit_")
+                try:
+                    nr = int(newName2[1])
+                    nr = nr + 1
+                    nr = str(nr)
+                except:
+                    nr = "0"
+                newSavePath = path + newName2[0] + "_edit_" + nr +"."+ newName[1]
+                print("NEW PATH:" + newSavePath)
+                save_path = newSavePath
                 movie.add_subtitle(subtitle_file,save_path)
 
                 return save_path

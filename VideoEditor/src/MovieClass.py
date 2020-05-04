@@ -10,26 +10,27 @@ path = "/".join(path)
 class Movie:
     def __init__(self,url):
 
-        dirURL = url
-        dirURL = dirURL.split("/")
-        newFileName = dirURL[-1]
-        newDirectory = dirURL[-1].split('.')
-        newDirectory = newDirectory[0]
-        newPath = os.path.join(path, newDirectory)
-        try:
-            os.mkdir(newPath)
-        except:
-            print("nu se poate asa ceva")
-        print(newPath+"/")
-
-        try:
-            copyOfTheURL = newPath+"/"+newFileName
-            shutil.copyfile(url,copyOfTheURL)
-            self.url = copyOfTheURL
-        except:
-            print("Na beleaua")
-            self.url = url
-
+        # dirURL = url
+        # dirURL = dirURL.split("/")
+        # newFileName = dirURL[-1]
+        # newDirectory = dirURL[-1].split('.')
+        # newDirectory = newDirectory[0]
+        # newPath = os.path.join(path, newDirectory)
+        # try:
+        #     os.mkdir(newPath)
+        # except:
+        #     print("nu se poate asa ceva")
+        # print(newPath+"/")
+        #
+        # try:
+        #     copyOfTheURL = newPath+"/"+newFileName
+        #     shutil.copyfile(url,copyOfTheURL)
+        #     self.url = copyOfTheURL
+        # except:
+        #     print("Na beleaua")
+        #     self.url = url
+        self.url = url
+        print("URLLLL:" + self.url)
         self.clip = VideoFileClip(url)
         self.result = None
 
@@ -51,10 +52,11 @@ class Movie:
 
                 Daca datele introduse nu sunt valide se afiseaza un mesaj corespunzator.
             """
-
+            print("ORIGINAL:"+self.url)
             if(t1<time and t2<time and t1>=0 and t2>=0):
                 self.result = self.clip.subclip(t1,t2)
                 self.result.write_videofile(name)
+
 
             else:
                 print("Parametrii pentru decupare nu sunt corecti.")

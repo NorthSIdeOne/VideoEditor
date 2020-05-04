@@ -434,19 +434,16 @@ class MainWindow(QMainWindow):
                 the curent video path with the path provided by the
                 'edit.cut'
             """
-            if(self.curentIndex == -1 and self.totalIndex != -1):
-                self.curentIndex = 0
             try:
-                #empty list to put the source video
-                videoList = []
-                videoList.append(self.curentFiles[self.curentIndex])
+
                 #if both buttons are pressed the the function can be called
                 if(self.lockButtonStart.isChecked() == True and self.lockButtonFinish.isChecked() == True):
                         try:
                             #save the current index before cut because user can change the 'curentIndex' during execution
                             indexOfRootVideo = self.curentIndex
+
                             #call the cut function and the result path is saved in currentFiles
-                            self.curentFiles[indexOfRootVideo] = self.edit.cut(videoList, [self.cutStart.toPlainText(),self.cutFinish.toPlainText()])
+                            self.curentFiles[indexOfRootVideo] = self.edit.cut([self.curentFiles[indexOfRootVideo]], [self.cutStart.toPlainText(),self.cutFinish.toPlainText()])
                             #Set the new video
                             self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("../resources/videos/blackvideo.mp4")))
                             self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
@@ -760,7 +757,7 @@ class MainWindow(QMainWindow):
             to a specific time,the video position is updated.
         """
         self.mediaPlayer.setPosition(position)
-        print(self.mediaPlayer.position)
+
 
     def skipforwadFunction(self):
         self.mediaPlayer.setPosition(self.mediaPlayer.position() + 15000)
@@ -1023,6 +1020,7 @@ class MainWindow(QMainWindow):
     def ReleaseThread(self):
             self.threadmanager = True
             print(self.curentFiles)
+
 
     """---<GetFrame>---"""
 
