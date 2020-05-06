@@ -125,11 +125,20 @@ class Movie:
         try:
             # async = modul de apelare utilizat atunci cand fisierul audio are o durata diferita fata de cel audio
             if mode =="Replace audio":
-                time = self.clip.duration
                 audio = AudioFileClip(audio_file)
-                self.result = concatenate_videoclips([self.clip]).set_audio(audio)
-                self.result = self.result.subclip(0,time)
-                self.result.write_videofile(out_name)
+                sound_time = audio.duration
+                time = self.clip.duration
+                if sound_time < time:
+                    temp1 = self.clip.subclip(0,sound_time)
+                    temp2 = self.clip.subclip(sound_time,time)
+                    self.result = concatenate_videoclips([temp1]).set_audio(audio)
+                    self.result = concatenate_videoclips([self.result,temp2])
+                    self.result.write_videofile(out_name)
+
+                else:
+                    self.result = concatenate_videoclips([self.clip]).set_audio(audio)
+                    self.result = self.result.subclip(0,time)
+                    self.result.write_videofile(out_name)
 
             # sync = modul de apelare utilizat atunci cand fisierul audio si cel audio au aceeasi durata
             elif mode =="sync":

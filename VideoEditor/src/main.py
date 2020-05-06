@@ -81,6 +81,8 @@ class MainWindow(QMainWindow):
         self.totalNrOfVideosConcat = -1
         #Media play speed
         self.speed = 1
+        #
+        self.subtitlesFileVG = ''
 
         """-------------------</Global variables>----------------------------"""
 
@@ -241,6 +243,12 @@ class MainWindow(QMainWindow):
         self.cleanButton.clicked.connect(self.removeSubtitlesFunction)
         self.addSubtitle.clicked.connect(self.addSubtitlesThread)
         """</AddSubtitles>"""
+
+        """<VideoGrep>"""
+        self.loadSubtitlesVG.clicked.connect(self.loadSubtitlesVideoGrep)
+        self.cleanButtonVideoGrep.clicked.connect(self.removeSubtitlesVideoGrep)
+        self.videoGrep.clicked.connect(self.videoGrepThread)
+        """</VideoGrep>"""
 
         """         -------------</Edit  Buttons>-----------------            """
         """         -------------<Shortcut Buttons>---------------            """
@@ -642,6 +650,47 @@ class MainWindow(QMainWindow):
 
     """-----------------------</Add Subtitles functions>----------------------"""
 
+    """-----------------------</VideoGrep functions>--------------------------"""
+    def loadSubtitlesVideoGrep(self):
+        try:
+            fileName = QFileDialog.getOpenFileName(self,"Open Subtitles")
+            if(fileName[0].split('.')[-1] == "srt"):
+                self.subtitlesFileVG = fileName[0]
+                self.subtitlesCheckVideoGrep.setIcon(QIcon("../resources/icons/GUI_Icons/check.png"))
+            else:
+                QMessageBox.about(self, "Subtitles", "Couldn't load subtitles.Please use file with .srt extension.")
+
+        except:
+            print("Problem in load Subtitles function")
+
+    def removeSubtitlesVideoGrep(self):
+        self.subtitlesFileVG = ''
+        self.subtitlesCheckVideoGrep.setIcon(QIcon("../resources/icons/GUI_Icons/ezgif-7-e04c11fb7018.png"))
+
+    def videoGrepFunction(self):
+        try:
+            if(self.subtitlesFileVG != ''):
+                if(self.totalIndex != -1):
+                    indexOfRootVideo = self.curentIndex
+                    vgMode = self.VGMODE.currentText()
+                    if(vgMode == "Clasic"):
+                        words = self.vglistSpeciale.toPlainText().split(',')
+                    else:
+                        words = [self.firstWord.toPlainText(),self.secondWord.toPlainText()]
+
+                    self.curentFiles[indexOfRootVideo] = self.edit.find_sequence([self.curentFiles[indexOfRootVideo]],words,self.subtitlesFileVG,vgMode)
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("../resources/videos/blackvideo.mp4")))
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(self.curentFiles[indexOfRootVideo])))
+                else:
+                    print("No video uploaded")
+            else:
+                print("No subtitles file uploaded")
+        except:
+            print("Problem in video Grep Function")
+
+
+    """-----------------------</VideoGrep functions>--------------------------"""
+
     """--------------------------<File functions>----------------------------"""
     def openFile(self):
         """
@@ -899,7 +948,6 @@ class MainWindow(QMainWindow):
             shutil.move(self.curentFiles[self.curentIndex], fileName[0])
             print("Save video Done")
         except:
-            QMessageBox.about(self, "Save video", "Error during the video saving.")
             print("Error during the video saving")
 
     def SortFilesIndex(self):
@@ -1056,6 +1104,21 @@ class MainWindow(QMainWindow):
 
 
     """---</AddSubtitles>--"""
+
+    """---</VideoGrep>--"""
+    def videoGrepThread(self):
+        if(self.threadmanager == True):
+           try:
+               self.threadmanager = False
+               worker = Worker(self.videoGrepFunction)
+               worker.signals.finished.connect(self.ReleaseThread)
+               worker.signals.finished.connect(self.removeSubtitlesVideoGrep)
+               self.pool.start(worker)
+           except:
+               print("Problem with VideoGrep thread")
+        else:
+           print("A thread is already running")
+    """---</VideoGrep>--"""
 
     """---------------------</Thread functions>--------------------------"""
 

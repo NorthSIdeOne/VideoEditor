@@ -259,3 +259,122 @@ class Panel():
                 print("The list is empty")
         except:
             print("Something went wrong with add_subtitle method from Panel class")
+
+    def find_sequence(self,url_list,words,subtitle_file,mode):
+        try:
+            if len(url_list) > 0 and len(words) > 0:
+                if mode == "Clasic":
+                    movie = Movie(url_list[0])
+                    name = url_list[0].split("/")
+                    save_path = path
+                    save_path = save_path + name[-1]
+                    newName = name[-1].split('.')
+                    newName2 = newName[0].split("_edit_")
+                    try:
+                        nr = int(newName2[1])
+                        nr = nr + 1
+                        nr = str(nr)
+                    except:
+                        nr = "0"
+                    newSavePath = path + newName2[0] + "_edit_" + nr +"."+ newName[1]
+                    print("NEW PATH:" + newSavePath)
+                    save_path = newSavePath
+                    movie.find_sequence(words,subtitle_file,save_path)
+
+                    return save_path
+
+                if mode == "Custom":
+                    if len(words)==2:
+                        movie = Movie(url_list[0])
+                        name = url_list[0].split("/")
+                        save_path = path
+                        save_path = save_path + name[-1]
+                        newName = name[-1].split('.')
+                        newName2 = newName[0].split("_edit_")
+                        try:
+                            nr = int(newName2[1])
+                            nr = nr + 1
+                            nr = str(nr)
+                        except:
+                            nr = "0"
+                        newSavePath = path + newName2[0] + "_edit_" + nr +"."+ newName[1]
+                        print("NEW PATH:" + newSavePath)
+                        save_path = newSavePath
+
+                        try:
+                            with open(subtitle_file) as f:
+                                lines = f.readlines()
+                                #deschid fisierul de subtitrare si salvez continutul in variabila lines
+                        except:
+                            print("Something went wrong with find_sequence method(open file)")
+                            return url_list[0]
+
+                        times_texts = [] # lista in care voi salva textul si timpul corespunzator fiecaruia
+                        current_times , current_text = None, ""
+                        for line in lines:
+                            #extrag timpul pentru fiecare linie(rand) din subtitrare
+                            times = re.findall("[0-9]*:[0-9]*:[0-9]*,[0-9]*", line)
+                            if times != []:
+                                current_times = list(map(convert_time, times))
+                                #extrag timpul din subtitrare(in secunde)
+                            elif line == '\n':
+                                #salvez intr-o lista text-ul si timpul alocat pentru fiecare in parte
+                                times_texts.append((current_times, current_text))
+                                current_times, current_text = None, ""
+                            elif current_times is not None:
+                                current_text = current_text + line.replace("\n"," ")
+
+                        w1_t = list(find_word(words[0],times_texts))
+                        w2_t = list(find_word(words[1],times_texts))
+
+                        custom_rez = movie.clip.subclip(w1_t[0][0],w2_t[0][1])
+                        custom_rez.write_videofile(save_path)
+
+                        return save_path
+
+                    else:
+                        print("Ati introdus prea multe/putine cuvinte. Pentru modul custom trebuie sa introduceti 2 cuvinte!")
+
+                else:
+                    print("Nu ati introdus un mod valid. Introduceti clasic sau custom!")
+
+            else:
+                print("The list is empty")
+        except:
+            print("Something went wrong with find_sequence method from Panel class")
+            return url_list[0]
+
+
+
+
+
+
+
+
+def convert_time(timestring):
+    try:
+        """ Convertesc stringul in secunde(mai exact extrag timpul aferent stringului respectiv) """
+        nums = list(map(float, re.findall(r'\d+', timestring)))
+        return 3600*nums[0] + 60*nums[1] + nums[2] + nums[3]/1000
+    except:
+            print("Something went wrong with convert_time function")
+
+def find_word(word,times_texts, padding=.05):
+
+    """
+        Functia "find_word" cauta cuvantul dorit in textul subtitrarii si tot odata calculeaza
+        timpul corespunzator pentru cuvantul primit ca parametru.
+
+        Rezultatul functiei este reprezentat de doua constante, t1 si t2, unde t1 reprezinta timpul
+        de start al cuvantului si t2 timpul de stop al cuvantului.
+    """
+    try:
+        matches = [re.search(word, text)
+                for (t,text) in times_texts]
+
+        return [(t1 + m.start()*(t2-t1)/len(text) - padding,
+            t1 + m.end()*(t2-t1)/len(text) + padding)
+            for m,((t1,t2),text) in zip(matches,times_texts)
+            if (m is not None)]
+    except:
+        print("Something went wrong with find_word function")
