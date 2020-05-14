@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1223</width>
-    <height>1018</height>
+    <width>1424</width>
+    <height>1017</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -551,7 +551,7 @@ QToolBox QScrollArea QWidget QWidget {
 }</string>
                 </property>
                 <property name="currentIndex">
-                 <number>7</number>
+                 <number>5</number>
                 </property>
                 <widget class="QWidget" name="Concatenate">
                  <property name="geometry">
@@ -1569,7 +1569,7 @@ QPushButton:pressed {
                     <x>0</x>
                     <y>0</y>
                     <width>241</width>
-                    <height>341</height>
+                    <height>351</height>
                    </rect>
                   </property>
                   <property name="frameShape">
@@ -2672,8 +2672,8 @@ QPushButton:focus {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>100</width>
-                   <height>30</height>
+                   <width>246</width>
+                   <height>358</height>
                   </rect>
                  </property>
                  <property name="styleSheet">
@@ -2693,7 +2693,7 @@ QPushButton:focus {
                     <x>0</x>
                     <y>0</y>
                     <width>241</width>
-                    <height>341</height>
+                    <height>361</height>
                    </rect>
                   </property>
                   <property name="frameShape">
@@ -3169,7 +3169,7 @@ QToolButton::menu-arrow:hover {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>246</width>
+                   <width>245</width>
                    <height>359</height>
                   </rect>
                  </property>
@@ -4252,11 +4252,6 @@ QPushButton:focus {
                </widget>
               </item>
              </layout>
-            </widget>
-            <widget class="QWidget" name="effectsMenu">
-             <attribute name="title">
-              <string>Efects</string>
-             </attribute>
             </widget>
            </widget>
           </item>
@@ -5873,7 +5868,7 @@ border-radius: 5px;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1223</width>
+     <width>1424</width>
      <height>26</height>
     </rect>
    </property>

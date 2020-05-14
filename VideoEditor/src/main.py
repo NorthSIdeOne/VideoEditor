@@ -50,8 +50,10 @@ class MainWindow(QMainWindow):
             This function initialize all the buttons and all the setting for
             displaying and control the video.
         """
+        self.setWindowIcon(QtGui.QIcon("../resources/icons/GUI_Icons/1519132568_movavi-video-editor.png"))
         #delete all temp files
         self.deleteAllTemp()
+        self.setWindowTitle("VideoEditor")
 
         """<Objects>"""
         #Object for controling all edit functions
@@ -579,7 +581,6 @@ class MainWindow(QMainWindow):
 
                 print("No aduio file uploaded")
         except:
-
             print("Problem in SoundReplaceFunction")
 
     """-----------------------</Sound Repalce functions>-------------------------"""

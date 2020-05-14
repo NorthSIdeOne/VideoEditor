@@ -164,6 +164,7 @@ class Movie:
 
                 audio_f = AudioFileClip(audio_file)
                 time = self.clip.duration
+                times = audio_f.duration
 
                 new_audioclip = CompositeAudioClip([self.clip.audio, audio_f])
                 self.clip.audio = new_audioclip

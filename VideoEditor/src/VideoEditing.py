@@ -210,6 +210,7 @@ class Panel():
 
             else:
                 print("The list is empty")
+                return url_list[0]
         except:
             print("Something went wrong with sound_replace method from Panel class")
             return url_list[0]
@@ -259,6 +260,7 @@ class Panel():
                 print("The list is empty")
         except:
             print("Something went wrong with add_subtitle method from Panel class")
+            return url_list[0]
 
     def find_sequence(self,url_list,words,subtitle_file,mode):
         try:
@@ -280,7 +282,6 @@ class Panel():
                     print("NEW PATH:" + newSavePath)
                     save_path = newSavePath
                     movie.find_sequence(words,subtitle_file,save_path)
-
                     return save_path
 
                 if mode == "Custom":
