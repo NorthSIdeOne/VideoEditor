@@ -76,11 +76,6 @@ class Movie:
         except:
             print("Something went wrong with video_resize method")
 
-    def video_speed(self,fact,name):
-        self.result = self.clip.speedx(fact) 
-        #elf.result.speedx(self.clip,fact)
-        self.result.write_videofile(name)
-
     def video_mirroring(self,name):
         try:
             self.result = self.clip.fx(vfx.mirror_x)
