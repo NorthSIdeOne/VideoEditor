@@ -55,7 +55,6 @@ class Movie:
                 Daca conditia de mai sus nu este respectata procesul de concatenare va esua.
             """
         
-        
         except:
             print("Something went wrong with concat method")
 
