@@ -6,11 +6,6 @@ obj_list = []
 width_list = []
 
 class Panel:
-    #def __init__(self,url):
-        #self.url = url
-        #self.object = Movie(url)
-        #self.name = url.split("\\")
-        
     
     def cut(self,url_list,time_list):
         try:
