@@ -6,8 +6,7 @@ obj_list = []
 width_list = []
 
 class Panel:
-    
-    
+      
     def cut(self,url_list,time_list):
         try:
             if len(url_list) > 0 and len(time_list) == 2 :
